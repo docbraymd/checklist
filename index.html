@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IM Residency Program Comparison 2025-2026</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -344,6 +345,21 @@
         .toast.error {
             background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%);
         }
+
+        /* Hide unselected items when filter is active */
+        .filter-active .checklist-item:not(.selected) {
+            display: none;
+        }
+
+        /* Hide empty categories when filter is active */
+        .filter-active .category:not(.has-selected) {
+            display: none;
+        }
+
+        .checklist-item.selected {
+            background: #2a3a4a;
+            border-left: 3px solid #00ff88;
+        }
     </style>
 </head>
 <body>
@@ -378,7 +394,8 @@
             <button class="btn btn-primary top-ten" onclick="selectTopTen()">⚡ Select Top 10 Essential</button>
             <button class="btn btn-success" onclick="selectAll()">✓ Select All Criteria</button>
             <button class="btn btn-danger" onclick="deselectAll()">✗ Deselect All</button>
-            <button class="btn btn-success" onclick="exportToCSV()" id="csvBtn">📊 Export Comparison CSV</button>
+            <button class="btn btn-warning" onclick="toggleFilter()" id="filterBtn">👁️ Hide Unselected</button>
+            <button class="btn btn-success" onclick="exportToExcel()" id="excelBtn">📊 Export to Excel</button>
             <button class="btn btn-warning" onclick="exportToPDF()" id="pdfBtn">📄 Download PDF Checklist</button>
         </div>
 
@@ -641,6 +658,7 @@
         };
 
         let selectedItems = new Set();
+        let filterActive = false;
 
         function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
@@ -704,10 +722,53 @@
             }
             
             updateSummary();
+            updateFilterClasses();
         }
 
         function updateSummary() {
             document.getElementById('selectedCount').textContent = selectedItems.size;
+        }
+
+        function updateFilterClasses() {
+            // Update selected class on all checklist items
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+
+            // Update has-selected class on categories
+            document.querySelectorAll('.category').forEach(category => {
+                const hasSelected = category.querySelector('.checklist-item.selected');
+                if (hasSelected) {
+                    category.classList.add('has-selected');
+                } else {
+                    category.classList.remove('has-selected');
+                }
+            });
+        }
+
+        function toggleFilter() {
+            filterActive = !filterActive;
+            const container = document.querySelector('.container');
+            const btn = document.getElementById('filterBtn');
+            
+            if (filterActive) {
+                container.classList.add('filter-active');
+                btn.textContent = '👁️ Show All';
+                btn.classList.remove('btn-warning');
+                btn.classList.add('btn-primary');
+                showToast('📌 Showing only selected criteria');
+            } else {
+                container.classList.remove('filter-active');
+                btn.textContent = '👁️ Hide Unselected';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-warning');
+                showToast('👁️ Showing all criteria');
+            }
         }
 
         function selectAll() {
@@ -717,6 +778,7 @@
                     checkbox.dispatchEvent(new Event('change'));
                 }
             });
+            updateFilterClasses();
         }
 
         function deselectAll() {
@@ -728,6 +790,7 @@
             });
             selectedItems.clear();
             updateSummary();
+            updateFilterClasses();
         }
 
         function selectTop25() {
@@ -769,6 +832,7 @@
                 }
             });
             
+            updateFilterClasses();
             showToast('✅ Selected 25 most common criteria');
         }
 
@@ -796,32 +860,27 @@
                 }
             });
             
+            updateFilterClasses();
             showToast('✅ Selected 10 essential criteria');
         }
 
-        function exportToCSV() {
+        function exportToExcel() {
             if (selectedItems.size === 0) {
                 showToast('⚠️ Please select at least one criterion', true);
                 return;
             }
 
+            if (typeof XLSX === 'undefined') {
+                showToast('❌ Excel library not loaded. Please refresh.', true);
+                return;
+            }
+
             try {
-                const btn = document.getElementById('csvBtn');
+                const btn = document.getElementById('excelBtn');
                 btn.disabled = true;
                 btn.textContent = '⏳ Generating...';
 
-                let csvContent = "Category,Criteria";
-                for (let i = 1; i <= 15; i++) {
-                    csvContent += `,Program ${i}`;
-                }
-                csvContent += ",Comments/Notes\n";
-                
-                csvContent += ",,";
-                for (let i = 1; i <= 15; i++) {
-                    csvContent += `"[Enter Program Name]",`;
-                }
-                csvContent += "\n";
-                
+                // Group items by category
                 const itemsByCategory = {};
                 selectedItems.forEach(key => {
                     const [category, item] = key.split('|||');
@@ -829,43 +888,96 @@
                     itemsByCategory[category].push(item);
                 });
 
+                // Create worksheet data
+                const wsData = [];
+                
+                // Header row with program columns
+                const headerRow = ['Category', 'Criteria'];
+                for (let i = 1; i <= 15; i++) {
+                    headerRow.push(`Program ${i}`);
+                }
+                headerRow.push('Comments/Notes');
+                wsData.push(headerRow);
+                
+                // Program name row
+                const nameRow = ['', ''];
+                for (let i = 1; i <= 15; i++) {
+                    nameRow.push('[Enter Program Name]');
+                }
+                nameRow.push('');
+                wsData.push(nameRow);
+                
+                // Add each criterion as a row
                 Object.keys(itemsByCategory).sort().forEach(category => {
                     itemsByCategory[category].forEach(item => {
-                        csvContent += `"${category.replace(/"/g, '""')}","${item.replace(/"/g, '""')}"`;
+                        const row = [category, item];
+                        // Add empty cells for each program rating
                         for (let i = 1; i <= 15; i++) {
-                            csvContent += ',';
+                            row.push('');
                         }
-                        csvContent += ',\n';
+                        row.push(''); // Empty comments cell
+                        wsData.push(row);
                     });
                 });
 
-                csvContent += '\n\n"INSTRUCTIONS","Rate each program using 1-5 scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent"\n';
-                csvContent += '"","Complete this immediately after each interview (within 24 hours) to capture fresh impressions"\n';
+                // Add instructions at the bottom
+                wsData.push([]);
+                wsData.push(['INSTRUCTIONS', 'Rate each program using 1-5 scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent']);
+                wsData.push(['', 'Complete this immediately after each interview (within 24 hours) to capture fresh impressions']);
+                wsData.push(['', 'Research suggests prioritizing personal fit, future career goals, and program support']);
 
-                const BOM = "\uFEFF";
-                const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-                const filename = `IM_Residency_Comparison_${new Date().toISOString().split('T')[0]}.csv`;
+                // Create workbook and worksheet
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+                // Set column widths
+                const colWidths = [
+                    { wch: 30 },  // Category
+                    { wch: 60 },  // Criteria
+                ];
+                for (let i = 0; i < 15; i++) {
+                    colWidths.push({ wch: 12 }); // Program columns
+                }
+                colWidths.push({ wch: 30 }); // Comments
+                ws['!cols'] = colWidths;
+
+                // Style the header row (bold)
+                const headerStyle = {
+                    font: { bold: true },
+                    fill: { fgColor: { rgb: "4472C4" } },
+                    alignment: { horizontal: "center", vertical: "center" }
+                };
+
+                // Apply header styling (row 1)
+                for (let col = 0; col < headerRow.length; col++) {
+                    const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
+                    if (!ws[cellRef]) ws[cellRef] = { t: 's', v: '' };
+                    ws[cellRef].s = headerStyle;
+                }
+
+                // Freeze panes: freeze first 2 columns and first 2 rows
+                ws['!freeze'] = { xSplit: 2, ySplit: 2 };
+
+                // Add worksheet to workbook
+                XLSX.utils.book_append_sheet(wb, ws, 'Program Comparison');
+
+                // Generate filename with date
+                const filename = `IM_Residency_Comparison_${new Date().toISOString().split('T')[0]}.xlsx`;
                 
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
+                // Save file
+                XLSX.writeFile(wb, filename);
 
-                showToast('✅ CSV downloaded successfully!');
+                showToast('✅ Excel file downloaded successfully!');
                 
                 btn.disabled = false;
-                btn.textContent = '📊 Export Comparison CSV';
+                btn.textContent = '📊 Export to Excel';
                 
             } catch (error) {
-                console.error('CSV export error:', error);
+                console.error('Excel export error:', error);
                 showToast('❌ Export failed: ' + error.message, true);
-                const btn = document.getElementById('csvBtn');
+                const btn = document.getElementById('excelBtn');
                 btn.disabled = false;
-                btn.textContent = '📊 Export Comparison CSV';
+                btn.textContent = '📊 Export to Excel';
             }
         }
 
