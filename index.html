@@ -143,36 +143,63 @@
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: #ffffff;
         }
 
         .btn-success:hover:not(:disabled) {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 239, 125, 0.5);
+        }
+
+        .btn-success.excel {
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+        }
+
+        .btn-success.excel:hover:not(:disabled) {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5);
+        }
+
+        .btn-success.csv {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .btn-success.csv:hover:not(:disabled) {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5);
         }
 
         .btn-warning {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            background: linear-gradient(135deg, #fc6c8f 0%, #ffb88c 100%);
             color: #ffffff;
         }
 
         .btn-warning:hover:not(:disabled) {
-            background: linear-gradient(135deg, #fee140 0%, #fa709a 100%);
+            background: linear-gradient(135deg, #ffb88c 0%, #fc6c8f 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(250, 112, 154, 0.5);
+            box-shadow: 0 8px 25px rgba(252, 108, 143, 0.5);
+        }
+
+        .btn-warning.pdf {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .btn-warning.pdf:hover:not(:disabled) {
+            background: linear-gradient(135deg, #fee140 0%, #fa709a 100%);
+            box-shadow: 0 8px 25px rgba(254, 225, 64, 0.5);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%);
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
             color: #ffffff;
         }
 
         .btn-danger:hover:not(:disabled) {
-            background: linear-gradient(135deg, #ff5858 0%, #f857a6 100%);
+            background: linear-gradient(135deg, #f45c43 0%, #eb3349 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(248, 87, 166, 0.5);
+            box-shadow: 0 8px 25px rgba(235, 51, 73, 0.5);
         }
 
         .content {
@@ -395,9 +422,9 @@
             <button class="btn btn-success" onclick="selectAll()">✓ Select All Criteria</button>
             <button class="btn btn-danger" onclick="deselectAll()">✗ Deselect All</button>
             <button class="btn btn-warning" onclick="toggleFilter()" id="filterBtn">👁️ Hide Unselected</button>
-            <button class="btn btn-success" onclick="exportToExcel()" id="excelBtn">📊 Export to Excel</button>
-            <button class="btn btn-success" onclick="exportToCSV()" id="csvBtn">📄 Export to CSV</button>
-            <button class="btn btn-warning" onclick="exportToPDF()" id="pdfBtn">📑 Download PDF Checklist</button>
+            <button class="btn btn-success excel" onclick="exportToExcel()" id="excelBtn">📊 Export to Excel</button>
+            <button class="btn btn-success csv" onclick="exportToCSV()" id="csvBtn">📄 Export to CSV</button>
+            <button class="btn btn-warning pdf" onclick="exportToPDF()" id="pdfBtn">📑 Download PDF Checklist</button>
         </div>
 
         <div class="content">
@@ -1194,4 +1221,3 @@
     </script>
 </body>
 </html>
-
