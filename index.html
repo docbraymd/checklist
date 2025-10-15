@@ -396,7 +396,8 @@
             <button class="btn btn-danger" onclick="deselectAll()">✗ Deselect All</button>
             <button class="btn btn-warning" onclick="toggleFilter()" id="filterBtn">👁️ Hide Unselected</button>
             <button class="btn btn-success" onclick="exportToExcel()" id="excelBtn">📊 Export to Excel</button>
-            <button class="btn btn-warning" onclick="exportToPDF()" id="pdfBtn">📄 Download PDF Checklist</button>
+            <button class="btn btn-success" onclick="exportToCSV()" id="csvBtn">📄 Export to CSV</button>
+            <button class="btn btn-warning" onclick="exportToPDF()" id="pdfBtn">📑 Download PDF Checklist</button>
         </div>
 
         <div class="content">
@@ -907,7 +908,11 @@
                 nameRow.push('');
                 wsData.push(nameRow);
                 
+                // Track the starting row for data (after header and name row)
+                const dataStartRow = 3; // Excel is 1-indexed, but array is 0-indexed, so row 3 in Excel is index 2
+                
                 // Add each criterion as a row
+                let criteriaCount = 0;
                 Object.keys(itemsByCategory).sort().forEach(category => {
                     itemsByCategory[category].forEach(item => {
                         const row = [category, item];
@@ -917,11 +922,26 @@
                         }
                         row.push(''); // Empty comments cell
                         wsData.push(row);
+                        criteriaCount++;
                     });
                 });
 
-                // Add instructions at the bottom
+                // Add TOTAL row with SUM formulas
+                const totalRow = ['', 'TOTAL SCORE'];
+                const dataEndRow = dataStartRow + criteriaCount - 1; // Last row with criteria data
+                
+                for (let i = 0; i < 15; i++) {
+                    const colLetter = String.fromCharCode(67 + i); // C=67 (ASCII), D=68, etc.
+                    const formula = `SUM(${colLetter}${dataStartRow}:${colLetter}${dataEndRow})`;
+                    totalRow.push({ f: formula });
+                }
+                totalRow.push(''); // Empty comments cell
+                wsData.push(totalRow);
+
+                // Add empty row before instructions
                 wsData.push([]);
+                
+                // Add instructions at the bottom
                 wsData.push(['INSTRUCTIONS', 'Rate each program using 1-5 scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent']);
                 wsData.push(['', 'Complete this immediately after each interview (within 24 hours) to capture fresh impressions']);
                 wsData.push(['', 'Research suggests prioritizing personal fit, future career goals, and program support']);
@@ -940,20 +960,6 @@
                 }
                 colWidths.push({ wch: 30 }); // Comments
                 ws['!cols'] = colWidths;
-
-                // Style the header row (bold)
-                const headerStyle = {
-                    font: { bold: true },
-                    fill: { fgColor: { rgb: "4472C4" } },
-                    alignment: { horizontal: "center", vertical: "center" }
-                };
-
-                // Apply header styling (row 1)
-                for (let col = 0; col < headerRow.length; col++) {
-                    const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
-                    if (!ws[cellRef]) ws[cellRef] = { t: 's', v: '' };
-                    ws[cellRef].s = headerStyle;
-                }
 
                 // Freeze panes: freeze first 2 columns and first 2 rows
                 ws['!freeze'] = { xSplit: 2, ySplit: 2 };
@@ -978,6 +984,79 @@
                 const btn = document.getElementById('excelBtn');
                 btn.disabled = false;
                 btn.textContent = '📊 Export to Excel';
+            }
+        }
+
+        function exportToCSV() {
+            if (selectedItems.size === 0) {
+                showToast('⚠️ Please select at least one criterion', true);
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('csvBtn');
+                btn.disabled = true;
+                btn.textContent = '⏳ Generating...';
+
+                let csvContent = "Category,Criteria";
+                for (let i = 1; i <= 15; i++) {
+                    csvContent += `,Program ${i}`;
+                }
+                csvContent += ",Comments/Notes\n";
+                
+                csvContent += ",,";
+                for (let i = 1; i <= 15; i++) {
+                    csvContent += `"[Enter Program Name]",`;
+                }
+                csvContent += "\n";
+                
+                const itemsByCategory = {};
+                selectedItems.forEach(key => {
+                    const [category, item] = key.split('|||');
+                    if (!itemsByCategory[category]) itemsByCategory[category] = [];
+                    itemsByCategory[category].push(item);
+                });
+
+                Object.keys(itemsByCategory).sort().forEach(category => {
+                    itemsByCategory[category].forEach(item => {
+                        csvContent += `"${category.replace(/"/g, '""')}","${item.replace(/"/g, '""')}"`;
+                        for (let i = 1; i <= 15; i++) {
+                            csvContent += ',';
+                        }
+                        csvContent += ',\n';
+                    });
+                });
+
+                // Add empty row before instructions
+                csvContent += '\n';
+                csvContent += '"INSTRUCTIONS","Rate each program using 1-5 scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent"\n';
+                csvContent += '"","Complete this immediately after each interview (within 24 hours) to capture fresh impressions"\n';
+                csvContent += '"","Research suggests prioritizing personal fit, future career goals, and program support"\n';
+
+                const BOM = "\uFEFF";
+                const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const filename = `IM_Residency_Comparison_${new Date().toISOString().split('T')[0]}.csv`;
+                
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                showToast('✅ CSV downloaded successfully!');
+                
+                btn.disabled = false;
+                btn.textContent = '📄 Export to CSV';
+                
+            } catch (error) {
+                console.error('CSV export error:', error);
+                showToast('❌ Export failed: ' + error.message, true);
+                const btn = document.getElementById('csvBtn');
+                btn.disabled = false;
+                btn.textContent = '📄 Export to CSV';
             }
         }
 
@@ -1115,3 +1194,4 @@
     </script>
 </body>
 </html>
+
