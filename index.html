@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IM Residency Program Comparison 2025-2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #0f0f1e;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+            .container {
+                border-radius: 0;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a5298 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #00d9ff;
+        }
+
+        .header h1 {
+            color: #00d9ff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+
+        .info-box {
+            background: #252535;
+            padding: 20px;
+            margin: 20px 30px;
+            border-radius: 10px;
+            border-left: 4px solid #ffd93b;
+        }
+
+        .info-box h3 {
+            color: #ffd93b;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #b0b0b0;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+
+        .rating-guide {
+            display: inline-flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .rating-guide span {
+            background: #1a1a2e;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+
+        .controls {
+            background: #1a1a2e;
+            padding: 20px 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid #2a2a3e;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-primary.top-ten {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-primary.top-ten:hover:not(:disabled) {
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #ffffff;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: #ffffff;
+        }
+
+        .btn-warning:hover:not(:disabled) {
+            background: linear-gradient(135deg, #fee140 0%, #fa709a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 112, 154, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f857a6 0%, #ff5858 100%);
+            color: #ffffff;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: linear-gradient(135deg, #ff5858 0%, #f857a6 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(248, 87, 166, 0.5);
+        }
+
+        .content {
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        .category {
+            margin-bottom: 30px;
+            background: #1a1a2e;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #00d9ff;
+            transition: all 0.3s ease;
+        }
+
+        .category:hover {
+            background: #1e1e2e;
+            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.1);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .category-header:hover {
+            background: #252535;
+        }
+
+        .category-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #00d9ff;
+            text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+        }
+
+        .category-count {
+            background: #00d9ff;
+            color: #0f0f1e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .category-items {
+            display: block;
+        }
+
+        .category-items.collapsed {
+            display: none;
+        }
+
+        .toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            background: #252535;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            background: #2a2a40;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 12px;
+            margin-top: 4px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #00d9ff;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+            color: #d0d0d0;
+            font-size: 0.95em;
+        }
+
+        .checklist-item input[type="checkbox"]:checked + label {
+            color: #00ff88;
+            font-weight: 500;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00d9ff;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00fff2;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .controls, .info-box {
+                display: none;
+            }
+            .category {
+                page-break-inside: avoid;
+            }
+        }
+
+        .stat-display {
+            text-align: center;
+            padding: 20px;
+            background: #252535;
+            margin: 0 30px 20px 30px;
+            border-radius: 10px;
+        }
+
+        .stat-display span {
+            color: #00ff88;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            font-weight: 600;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Internal Medicine Residency Program Comparison</h1>
+            <p>2025-2026 Application Cycle • Rate and compare up to 15 programs</p>
+        </div>
+
+        <div class="info-box">
+            <h3>📝 How to Use This Checklist</h3>
+            <p style="color: #00d9ff; font-weight: 600; margin-bottom: 10px;">✨ Updated for 2025-2026 cycle (ACGME Sept 2025 requirements)</p>
+            <p><strong>✓ Complete immediately post-interview (within 24 hours)</strong> to capture fresh impressions and reduce recall bias during ranking.</p>
+            <p><strong>✓ Use the 1-5 rating scale in your exported CSV:</strong></p>
+            <div class="rating-guide">
+                <span>1 = Poor</span>
+                <span>2 = Below Average</span>
+                <span>3 = Average</span>
+                <span>4 = Good</span>
+                <span>5 = Excellent</span>
+            </div>
+            <p style="margin-top: 15px;"><strong>✓ Select criteria important to YOU</strong> - use "Select Top 10 Essential" for a quick start with the most prioritized factors, then customize further.</p>
+            <p><strong>✓ Research suggests</strong> prioritizing personal fit, future career goals, and program support for long-term satisfaction.</p>
+        </div>
+
+        <div class="stat-display">
+            Selected: <span id="selectedCount">0</span> of <span id="totalCount">0</span> criteria
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="selectTop25()">⭐ Select Top 25 Most Common</button>
+            <button class="btn btn-primary top-ten" onclick="selectTopTen()">⚡ Select Top 10 Essential</button>
+            <button class="btn btn-success" onclick="selectAll()">✓ Select All Criteria</button>
+            <button class="btn btn-danger" onclick="deselectAll()">✗ Deselect All</button>
+            <button class="btn btn-success" onclick="exportToCSV()" id="csvBtn">📊 Export Comparison CSV</button>
+            <button class="btn btn-warning" onclick="exportToPDF()" id="pdfBtn">📄 Download PDF Checklist</button>
+        </div>
+
+        <div class="content">
+            <div id="checklistPanel"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const checklistData = {
+            "Education & Curriculum": [
+                "Program philosophy and mission alignment",
+                "ACGME accreditation status (no recent citations)",
+                "Overall curriculum quality and structure",
+                "Rotations and electives variety (exposure to subspecialties)",
+                "Educational rounds vs. work rounds balance",
+                "Conference quality (morning report, noon conference, grand rounds)",
+                "Patient volume and diversity (socioeconomic, ethnic backgrounds)",
+                "Library and educational resources access",
+                "Resident evaluation methods (milestones, direct observation, feedback frequency)",
+                "Board certification pass rates for graduates (>80% ACGME minimum; >90% excellent)",
+                "Continuity clinic model (weekly vs. block vs. X+Y)",
+                "Continuity clinic frequency (meets 10-month outpatient requirement)",
+                "Post-call clinic policies",
+                "Protected time for conferences and education",
+                "MKSAP subscription and board preparation support",
+                "In-Training Examination (ITE) administration and feedback",
+                "Simulation-based training availability",
+                "Point-of-care ultrasound (POCUS) training",
+                "Procedure training structure and competency assessment"
+            ],
+            "Faculty & Teaching": [
+                "Full-time vs. part-time faculty ratio",
+                "Research vs. teaching balance among faculty",
+                "Clinical and teaching skills of faculty",
+                "Faculty availability and approachability",
+                "Continuity clinic preceptors (longitudinal relationship)",
+                "Subspecialties represented (strong in areas of interest?)",
+                "Faculty involvement in patient counseling and education",
+                "Attending rounds frequency (2-3x weekly minimum on inpatient)",
+                "Bedside teaching vs. 'see and present' culture",
+                "Faculty-to-resident ratio",
+                "Faculty turnover rate",
+                "Faculty development in teaching",
+                "Program director accessibility and responsiveness",
+                "Associate/assistant program director support",
+                "Chief resident accessibility and mentorship"
+            ],
+            "Hospital & Facilities": [
+                "Community vs. university hospital setting",
+                "Staff support for program (nursing, labs, pathology, respiratory)",
+                "Consultative services availability and quality",
+                "Other residency programs present at training sites",
+                "Patient types and disease diversity",
+                "Patient socioeconomic and ethnic diversity",
+                "Hospital staff quality (nursing, support services)",
+                "Primary training site reputation",
+                "Number of different rotation sites",
+                "Distance and commute between sites",
+                "VA hospital rotations (if applicable)",
+                "EMR system consistency across sites (Epic, Cerner, etc.)",
+                "EMR user-friendliness",
+                "Telemedicine infrastructure",
+                "Call room quality and cleanliness",
+                "Call room privacy (individual vs. shared)",
+                "Resident lounge and workspace adequacy",
+                "Hospital cafeteria hours and quality",
+                "Hospital gym availability and quality"
+            ],
+            "Residents & Program Culture": [
+                "Number of residents per year",
+                "Medical schools of origin (diversity)",
+                "Resident personality, dependability, and honesty",
+                "Cooperativeness and compatibility among residents",
+                "Do residents socialize outside of work?",
+                "Collaborative vs. competitive environment",
+                "Support among co-residents (coverage culture)",
+                "Resident morale and happiness",
+                "Would residents choose program again?",
+                "Resident retention rate (>98% excellent for IM)",
+                "Attrition rate (<2% excellent; >3% concerning)",
+                "Resident enthusiasm and energy during interview",
+                "Residents appearing rested vs. exhausted",
+                "Interprofessional respect (with nurses, APPs, etc.)",
+                "Professionalism and mutual respect",
+                "Program responsiveness to resident concerns"
+            ],
+            "Workload & Duty Hours": [
+                "Average patients per resident (rotation and clinic)",
+                "Supervision levels and attending support",
+                "Call schedule type (night float, 24-hour, hybrid)",
+                "Call schedule frequency (Q3, Q4, Q5, etc.)",
+                "Rounds and teaching responsibilities",
+                "Scut work balance (phlebotomy, transport, etc.)",
+                "Time protected for conferences and clinics",
+                "Progressive autonomy from PGY1 to PGY3",
+                "Actual work hours vs. stated policy (<80 hours/week)",
+                "Duty hour violation frequency and handling",
+                "Culture around staying beyond scheduled hours",
+                "Post-call policies (time off after overnight)",
+                "Night float duration and frequency",
+                "Post-night float recovery days",
+                "Weekend coverage frequency",
+                "Home call frequency and burden",
+                "Ancillary support (phlebotomy, social work, respiratory therapy)"
+            ],
+            "Benefits & Wellness": [
+                "Salary for PGY-1, PGY-2, PGY-3",
+                "Professional dues, meals, and insurance coverage",
+                "Health insurance quality and employee contribution",
+                "Dental and vision coverage",
+                "Mental health coverage quality",
+                "Vacation, parental leave, maternity, sick leave policies",
+                "Parental leave duration (6+ weeks minimum; 12+ ideal)",
+                "Policy for birthing vs. non-birthing parents",
+                "Adoption and foster care leave",
+                "Conference funding and educational stipend",
+                "Books and MKSAP subscription provided",
+                "Moonlighting permitted (internal and/or external)",
+                "Year eligible for moonlighting and pay rates",
+                "Stress management support and wellness programs",
+                "24/7 confidential mental health access",
+                "Wellness curriculum and wellness committee",
+                "Regular burnout assessment with action plans",
+                "Protected wellness days or half-days",
+                "Leave of absence handling and support",
+                "Parking provision or costs",
+                "Housing or transportation stipend",
+                "Gym membership or fitness benefits",
+                "Childcare support (daycare availability, hours, costs)",
+                "Lactation facilities quality and proximity",
+                "Meal allowances and free meals during calls"
+            ],
+            "Community & Lifestyle": [
+                "Urban, suburban, or rural setting",
+                "Location and climate preferences",
+                "Environmental quality and safety",
+                "Cost of living and housing affordability",
+                "Average rent for 1-bedroom apartment",
+                "Ability to afford living alone vs. needing roommates",
+                "Economy and employment opportunities for partners/spouses",
+                "Childcare availability and schools quality",
+                "Culture, entertainment, and recreation options",
+                "Diversity and inclusion in community",
+                "IMG-friendly environment (if applicable)",
+                "Welcoming to families and LGBTQ+ residents",
+                "Distance from family and support networks",
+                "Commute time to hospital",
+                "Public transportation access and safety",
+                "Dating scene (if single)",
+                "Resident social activities and traditions",
+                "Community integration opportunities",
+                "Religious community access (if relevant)",
+                "Outdoor recreation access (trails, parks)"
+            ],
+            "Future Fit & Career Outcomes": [
+                "Fellowship match rates and support",
+                "Percentage of graduates pursuing fellowship",
+                "Fellowship first-choice match rate",
+                "Match rates in competitive fellowships (cardiology, GI, heme-onc)",
+                "Institutions where graduates match for fellowship",
+                "Primary care track availability (if applicable)",
+                "Alumni locations and practice types",
+                "Research and community service opportunities",
+                "Alignment with career goals (hospitalist vs. subspecialist vs. primary care)",
+                "In-house fellowship programs and recruitment",
+                "Subspecialty elective availability in areas of interest",
+                "Ability to do away 'audition' rotations",
+                "Access to subspecialty faculty mentors from PGY-1",
+                "Fellowship advising infrastructure",
+                "ERAS and interview support for fellowship applications",
+                "Job search support for hospitalist/primary care",
+                "CV building and interview skills training",
+                "Networking opportunities with alumni"
+            ],
+            "Research & Scholarship": [
+                "Research track availability with dedicated pathway",
+                "Protected research time (elective months available)",
+                "Ability to concentrate research time (3+ months consecutively)",
+                "Research-active faculty in areas of interest",
+                "NIH research ranking of department",
+                "T32 training grants or KL2 awards available",
+                "Statistical support and data analysis resources",
+                "IRB support and navigation assistance",
+                "Mandatory vs. optional research for graduation",
+                "Quality improvement project expectations",
+                "Presentation requirements (local, regional, national)",
+                "Publication expectations and support",
+                "Conference travel funding",
+                "Number of residents publishing annually",
+                "Percentage presenting at national conferences",
+                "Resident research day or symposium",
+                "Advanced degree opportunities (MPH, MS, certificates)"
+            ],
+            "Diversity, Equity & Inclusion": [
+                "Percentage of residents from underrepresented backgrounds",
+                "Women in leadership positions",
+                "IMG representation and support systems",
+                "LGBTQ+ friendly environment and resources",
+                "Faculty diversity (visible role models)",
+                "Active DEI committee with resident involvement",
+                "Dedicated DEI didactic sessions",
+                "Health equity curriculum and electives",
+                "Bias reduction training workshops",
+                "Cultural humility training",
+                "Health advocacy training",
+                "Language and cultural competency training",
+                "Holistic review in resident recruitment",
+                "Anti-discrimination and anti-harassment policies",
+                "Response system for discrimination incidents",
+                "Psychological safety in learning environment",
+                "Climate surveys and action on results"
+            ],
+            "Interview Day & Overall Impressions": [
+                "Interview day organization and professionalism",
+                "Punctuality and respect for your schedule",
+                "Clarity of program presentation",
+                "Responsiveness to questions",
+                "Access to current residents (multiple, varied PGY levels)",
+                "Resident openness and honesty",
+                "Residents appearing happy and energetic",
+                "Residents showing camaraderie and support",
+                "Quality of facilities tour",
+                "Overall gut feeling about fit and thriving potential",
+                "Sense of welcome and being valued",
+                "Alignment with your values and learning style",
+                "Comparison to other programs visited",
+                "Strengths observed during interview",
+                "Weaknesses or concerns identified",
+                "Follow-up communication quality"
+            ],
+            "Red Flags & Warning Signs": [
+                "Disorganized interview day with poor planning",
+                "Limited or no access to current residents",
+                "Residents seeming scripted or afraid to speak honestly",
+                "Dismissive or condescending faculty behavior",
+                "Defensive responses to reasonable questions",
+                "Evasive answers about program challenges",
+                "Low board pass rates (consistently <90%)",
+                "High attrition rate (>3% for IM)",
+                "Recent ACGME citations without clear resolution",
+                "Recent program director change without explanation",
+                "High faculty turnover",
+                "No structured procedure training program",
+                "Vague curriculum description",
+                "Unable to share fellowship match data",
+                "Residents appearing exhausted or burned out",
+                "Culture normalizing duty hour violations",
+                "No wellness program or only generic statements",
+                "Few residents with outside activities or interests",
+                "Lack of diversity without clear DEI efforts",
+                "Reports of malignant culture on forums",
+                "Program on ACGME probation",
+                "Unclear or evasive about salary and benefits",
+                "Below living wage for location",
+                "Inadequate parental leave policies"
+            ]
+        };
+
+        let selectedItems = new Set();
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show' + (isError ? ' error' : '');
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        function initializeChecklist() {
+            const panel = document.getElementById('checklistPanel');
+            let totalItems = 0;
+
+            Object.keys(checklistData).forEach((category, index) => {
+                const items = checklistData[category];
+                totalItems += items.length;
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                categoryDiv.innerHTML = `
+                    <div class="category-header" onclick="toggleCategory('category-${index}')">
+                        <h3 class="category-title">${category}</h3>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="category-count">${items.length} items</span>
+                            <span class="toggle-icon" id="icon-category-${index}">▼</span>
+                        </div>
+                    </div>
+                    <div class="category-items" id="category-${index}">
+                        ${items.map((item, itemIndex) => `
+                            <div class="checklist-item">
+                                <input type="checkbox" id="item-${index}-${itemIndex}" 
+                                       onchange="updateSelection('${category}', '${item.replace(/'/g, "\\'")}', this.checked)">
+                                <label for="item-${index}-${itemIndex}">${item}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                panel.appendChild(categoryDiv);
+            });
+
+            document.getElementById('totalCount').textContent = totalItems;
+            updateSummary();
+        }
+
+        function toggleCategory(categoryId) {
+            const items = document.getElementById(categoryId);
+            const icon = document.getElementById('icon-' + categoryId);
+            
+            items.classList.toggle('collapsed');
+            icon.classList.toggle('collapsed');
+        }
+
+        function updateSelection(category, item, isChecked) {
+            const key = `${category}|||${item}`;
+            
+            if (isChecked) {
+                selectedItems.add(key);
+            } else {
+                selectedItems.delete(key);
+            }
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('selectedCount').textContent = selectedItems.size;
+        }
+
+        function selectAll() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                if (!checkbox.checked) {
+                    checkbox.checked = true;
+                    checkbox.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        function deselectAll() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                if (checkbox.checked) {
+                    checkbox.checked = false;
+                    checkbox.dispatchEvent(new Event('change'));
+                }
+            });
+            selectedItems.clear();
+            updateSummary();
+        }
+
+        function selectTop25() {
+            deselectAll();
+            
+            const top25Factors = [
+                "Overall curriculum quality and structure",
+                "Board certification pass rates for graduates (>80% ACGME minimum; >90% excellent)",
+                "Conference quality (morning report, noon conference, grand rounds)",
+                "Point-of-care ultrasound (POCUS) training",
+                "Protected time for conferences and education",
+                "Faculty availability and approachability",
+                "Clinical and teaching skills of faculty",
+                "Attending rounds frequency (2-3x weekly minimum on inpatient)",
+                "Primary training site reputation",
+                "EMR system consistency across sites (Epic, Cerner, etc.)",
+                "Resident morale and happiness",
+                "Would residents choose program again?",
+                "Collaborative vs. competitive environment",
+                "Resident retention rate (>98% excellent for IM)",
+                "Actual work hours vs. stated policy (<80 hours/week)",
+                "Call schedule type (night float, 24-hour, hybrid)",
+                "Post-call policies (time off after overnight)",
+                "Salary for PGY-1, PGY-2, PGY-3",
+                "Parental leave duration (6+ weeks minimum; 12+ ideal)",
+                "Moonlighting permitted (internal and/or external)",
+                "Urban, suburban, or rural setting",
+                "Cost of living and housing affordability",
+                "Fellowship match rates and support",
+                "Alignment with career goals (hospitalist vs. subspecialist vs. primary care)",
+                "Overall gut feeling about fit and thriving potential"
+            ];
+            
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const label = checkbox.nextElementSibling.textContent;
+                if (top25Factors.includes(label)) {
+                    checkbox.checked = true;
+                    checkbox.dispatchEvent(new Event('change'));
+                }
+            });
+            
+            showToast('✅ Selected 25 most common criteria');
+        }
+
+        function selectTopTen() {
+            deselectAll();
+            
+            const topTenFactors = [
+                "Resident morale and happiness",
+                "Urban, suburban, or rural setting",
+                "Fellowship match rates and support",
+                "Board certification pass rates for graduates (>80% ACGME minimum; >90% excellent)",
+                "Salary for PGY-1, PGY-2, PGY-3",
+                "Actual work hours vs. stated policy (<80 hours/week)",
+                "Faculty availability and approachability",
+                "Overall curriculum quality and structure",
+                "Primary training site reputation",
+                "Overall gut feeling about fit and thriving potential"
+            ];
+            
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const label = checkbox.nextElementSibling.textContent;
+                if (topTenFactors.includes(label)) {
+                    checkbox.checked = true;
+                    checkbox.dispatchEvent(new Event('change'));
+                }
+            });
+            
+            showToast('✅ Selected 10 essential criteria');
+        }
+
+        function exportToCSV() {
+            if (selectedItems.size === 0) {
+                showToast('⚠️ Please select at least one criterion', true);
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('csvBtn');
+                btn.disabled = true;
+                btn.textContent = '⏳ Generating...';
+
+                let csvContent = "Category,Criteria";
+                for (let i = 1; i <= 15; i++) {
+                    csvContent += `,Program ${i}`;
+                }
+                csvContent += ",Comments/Notes\n";
+                
+                csvContent += ",,";
+                for (let i = 1; i <= 15; i++) {
+                    csvContent += `"[Enter Program Name]",`;
+                }
+                csvContent += "\n";
+                
+                const itemsByCategory = {};
+                selectedItems.forEach(key => {
+                    const [category, item] = key.split('|||');
+                    if (!itemsByCategory[category]) itemsByCategory[category] = [];
+                    itemsByCategory[category].push(item);
+                });
+
+                Object.keys(itemsByCategory).sort().forEach(category => {
+                    itemsByCategory[category].forEach(item => {
+                        csvContent += `"${category.replace(/"/g, '""')}","${item.replace(/"/g, '""')}"`;
+                        for (let i = 1; i <= 15; i++) {
+                            csvContent += ',';
+                        }
+                        csvContent += ',\n';
+                    });
+                });
+
+                csvContent += '\n\n"INSTRUCTIONS","Rate each program using 1-5 scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent"\n';
+                csvContent += '"","Complete this immediately after each interview (within 24 hours) to capture fresh impressions"\n';
+
+                const BOM = "\uFEFF";
+                const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+                const filename = `IM_Residency_Comparison_${new Date().toISOString().split('T')[0]}.csv`;
+                
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                showToast('✅ CSV downloaded successfully!');
+                
+                btn.disabled = false;
+                btn.textContent = '📊 Export Comparison CSV';
+                
+            } catch (error) {
+                console.error('CSV export error:', error);
+                showToast('❌ Export failed: ' + error.message, true);
+                const btn = document.getElementById('csvBtn');
+                btn.disabled = false;
+                btn.textContent = '📊 Export Comparison CSV';
+            }
+        }
+
+        function exportToPDF() {
+            if (selectedItems.size === 0) {
+                showToast('⚠️ Please select at least one criterion', true);
+                return;
+            }
+
+            if (typeof window.jspdf === 'undefined') {
+                showToast('❌ PDF library not loaded. Please refresh.', true);
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('pdfBtn');
+                btn.disabled = true;
+                btn.textContent = '⏳ Generating...';
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                const itemsByCategory = {};
+                selectedItems.forEach(key => {
+                    const [category, item] = key.split('|||');
+                    if (!itemsByCategory[category]) itemsByCategory[category] = [];
+                    itemsByCategory[category].push(item);
+                });
+
+                let yPosition = 20;
+                const pageHeight = doc.internal.pageSize.height;
+                const pageWidth = doc.internal.pageSize.width;
+                const margin = 15;
+                const maxWidth = pageWidth - (margin * 2);
+
+                // Title
+                doc.setFontSize(18);
+                doc.setTextColor(42, 82, 152);
+                doc.text('Internal Medicine Residency', pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 7;
+                doc.text('Program Evaluation Checklist', pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 10;
+                
+                // Subtitle
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text('2025-2026 Application Cycle', pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 5;
+                doc.text(`Generated: ${new Date().toLocaleDateString()} | ${selectedItems.size} criteria`, pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 12;
+
+                // Instructions
+                doc.setFillColor(240, 248, 255);
+                doc.rect(margin, yPosition, maxWidth, 35, 'F');
+                doc.setDrawColor(42, 82, 152);
+                doc.setLineWidth(1);
+                doc.line(margin, yPosition, margin, yPosition + 35);
+                
+                yPosition += 6;
+                doc.setFontSize(11);
+                doc.setTextColor(42, 82, 152);
+                doc.setFont(undefined, 'bold');
+                doc.text('Instructions:', margin + 3, yPosition);
+                
+                yPosition += 6;
+                doc.setFontSize(9);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont(undefined, 'normal');
+                doc.text('• Complete immediately after interview (within 24 hours)', margin + 3, yPosition);
+                yPosition += 5;
+                doc.text('• Use 1-5 rating scale: 1=Poor | 2=Below Avg | 3=Average | 4=Good | 5=Excellent', margin + 3, yPosition);
+                yPosition += 5;
+                doc.text('• Add notes about specific observations, strengths, and concerns', margin + 3, yPosition);
+                yPosition += 5;
+                doc.text('• Compare programs objectively to inform your rank list', margin + 3, yPosition);
+                yPosition += 12;
+
+                // Categories
+                Object.keys(itemsByCategory).sort().forEach(category => {
+                    if (yPosition > pageHeight - 20) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+
+                    doc.setFontSize(12);
+                    doc.setTextColor(0, 217, 255);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(category, margin, yPosition);
+                    yPosition += 2;
+                    doc.setDrawColor(0, 217, 255);
+                    doc.setLineWidth(0.5);
+                    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+                    yPosition += 7;
+
+                    doc.setFontSize(9);
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'normal');
+                    
+                    itemsByCategory[category].forEach(item => {
+                        if (yPosition > pageHeight - 15) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+
+                        doc.rect(margin, yPosition - 3, 3, 3);
+                        const splitText = doc.splitTextToSize(item, maxWidth - 8);
+                        doc.text(splitText, margin + 5, yPosition);
+                        yPosition += splitText.length * 5 + 2;
+                    });
+                    yPosition += 3;
+                });
+
+                const filename = `IM_Residency_Checklist_${new Date().toISOString().split('T')[0]}.pdf`;
+                doc.save(filename);
+
+                showToast('✅ PDF downloaded successfully!');
+                
+                btn.disabled = false;
+                btn.textContent = '📄 Download PDF Checklist';
+                
+            } catch (error) {
+                console.error('PDF export error:', error);
+                showToast('❌ Export failed: ' + error.message, true);
+                const btn = document.getElementById('pdfBtn');
+                btn.disabled = false;
+                btn.textContent = '📄 Download PDF Checklist';
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initializeChecklist();
+            console.log('IM Residency Checklist v2.0 - Fully standalone version');
+        };
+    </script>
+</body>
+</html>
