@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Residency Checklist Export</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .loading { text-align: center; padding: 50px; font-size: 18px; }
+        .error { color: red; padding: 20px; background: #ffe6e6; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading">Generating your export...</div>
+    <div id="error" class="error" style="display:none;"></div>
+
+    <script>
+        // Listen for data from parent window (GoDaddy iframe)
+        window.addEventListener('message', async (event) => {
+            if (event.data && event.data.type === 'residency_export') {
+                const { format, selectedItems } = event.data;
+                
+                try {
+                    document.getElementById('loading').textContent = 
+                        format === 'csv' ? 'Generating CSV...' : 'Generating PDF...';
+                    
+                    let blob, filename;
+                    
+                    if (format === 'csv') {
+                        const csvContent = generateCSV(selectedItems);
+                        blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                        filename = `IM_Residency_Comparison_${new Date().toISOString().split('T')[0]}.csv`;
+                    } else {
+                        const pdfBlob = await generatePDF(selectedItems);
+                        blob = pdfBlob;
+                        filename = `IM_Residency_Checklist_${new Date().toISOString().split('T')[0]}.pdf`;
+                    }
+                    
+                    // Force download - works on GitHub Pages (no sandbox!)
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    // Close this window after download
+                    setTimeout(() => window.close(), 1000);
+                    
+                } catch (error) {
+                    console.error('Export failed:', error);
+                    document.getElementById('error').innerHTML = 
+                        `Error generating ${format.toUpperCase()}: ${error.message}<br>
+                         <button onclick="location.reload()">Retry</button>`;
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('loading').style.display = 'none';
+                }
+            }
+        });
+
+        function generateCSV(selectedItems) {
+            let csvContent = "Category,Criteria";
+            for (let i = 1; i <= 15; i++) {
+                csvContent += `,Program ${i}`;
+            }
+            csvContent += ",Comments/Notes\n";
+            
+            csvContent += ",,";
+            for (let i = 1; i <= 15; i++) {
+                csvContent += `"[Enter Program Name]",`;
+            }
+            csvContent += "\n";
+            
+            const itemsByCategory = {};
+            selectedItems.forEach(key => {
+                const [category, item] = key.split('|||');
+                if (!itemsByCategory[category]) itemsByCategory[category] = [];
+                itemsByCategory[category].push(item);
+            });
+
+            Object.keys(itemsByCategory).sort().forEach(category => {
+                itemsByCategory[category].forEach(item => {
+                    csvContent += `"${category.replace(/"/g, '""')}","${item.replace(/"/g, '""')}"`;
+                    for (let i = 1; i <= 15; i++) {
+                        csvContent += ',';
+                    }
+                    csvContent += ',\n';
+                });
+            });
+
+            csvContent += '\n\n"INSTRUCTIONS","Rate each program using 1-5 scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent"\n';
+            return csvContent;
+        }
+
+        async function generatePDF(selectedItems) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const itemsByCategory = {};
+            selectedItems.forEach(key => {
+                const [category, item] = key.split('|||');
+                if (!itemsByCategory[category]) itemsByCategory[category] = [];
+                itemsByCategory[category].push(item);
+            });
+
+            let yPosition = 20;
+            const pageHeight = doc.internal.pageSize.height;
+            const pageWidth = doc.internal.pageSize.width;
+            const margin = 15;
+            const maxWidth = pageWidth - (margin * 2);
+
+            // Title
+            doc.setFontSize(18);
+            doc.setTextColor(42, 82, 152);
+            doc.text('Internal Medicine Residency', pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 7;
+            doc.text('Program Evaluation Checklist', pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 10;
+            
+            doc.setFontSize(10);
+            doc.text('2025-2026 Application Cycle', pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 5;
+            doc.text(`Generated: ${new Date().toLocaleDateString()} | ${selectedItems.length} criteria`, pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 12;
+
+            // Instructions
+            doc.setFillColor(240, 248, 255);
+            doc.rect(margin, yPosition, maxWidth, 35, 'F');
+            yPosition += 6;
+            doc.setFontSize(11);
+            doc.setTextColor(42, 82, 152);
+            doc.setFont(undefined, 'bold');
+            doc.text('Instructions:', margin + 3, yPosition);
+            yPosition += 12;
+            doc.setFontSize(9);
+            doc.setTextColor(0, 0, 0);
+            doc.setFont(undefined, 'normal');
+            doc.text('• Complete immediately after interview • 1-5 rating scale • Add notes', margin + 3, yPosition);
+
+            // Categories and items
+            Object.keys(itemsByCategory).sort().forEach(category => {
+                if (yPosition > pageHeight - 20) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+
+                doc.setFontSize(12);
+                doc.setTextColor(0, 217, 255);
+                doc.setFont(undefined, 'bold');
+                doc.text(category, margin, yPosition);
+                yPosition += 9;
+
+                doc.setFontSize(9);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont(undefined, 'normal');
+                
+                itemsByCategory[category].forEach(item => {
+                    if (yPosition > pageHeight - 15) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+
+                    doc.rect(margin, yPosition - 3, 3, 3);
+                    const splitText = doc.splitTextToSize(item, maxWidth - 8);
+                    doc.text(splitText, margin + 5, yPosition);
+                    yPosition += splitText.length * 5 + 2;
+                });
+                yPosition += 3;
+            });
+
+            return doc.output('blob');
+        }
+
+        // Fallback: If no message received in 5 seconds, show instructions
+        setTimeout(() => {
+            document.getElementById('loading').innerHTML = 
+                'No data received. This page should be opened automatically.<br>' +
+                '<a href="javascript:window.close()">Close</a>';
+        }, 5000);
+    </script>
+</body>
+</html>
