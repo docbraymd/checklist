@@ -1556,15 +1556,24 @@
 
                         doc.text(splitText, margin + 3, yPosition);
                         
-                        // Score should not be null for selected items
                         const scoreText = entry.score !== null ? String(entry.score) : 'Error';
                         
-                        doc.setTextColor(34, 139, 34); // Green (Using standard green for PDF scores)
+                        // Set color based on score to match slider colors
+                        let scoreColor = '#000000'; // Default black
+                        switch (entry.score) {
+                            case 1: scoreColor = '#ff4d4d'; break; // Red
+                            case 2: scoreColor = '#ff8c00'; break; // Orange
+                            case 3: scoreColor = '#ffcc00'; break; // Yellow
+                            case 4: scoreColor = '#9acd32'; break; // YellowGreen
+                            case 5: scoreColor = '#4caf50'; break; // Green
+                        }
+
+                        doc.setTextColor(scoreColor);
                         doc.setFont(undefined, 'bold');
                        
                         doc.text(scoreText, scoreX, yPosition);
                         
-                        doc.setTextColor(0, 0, 0);
+                        doc.setTextColor(0, 0, 0); // Reset text color to black
                         doc.setFont(undefined, 'normal');
 
                         yPosition += requiredHeight;
@@ -1655,3 +1664,4 @@
     </script>
 </body>
 </html>
+
