@@ -1548,8 +1548,18 @@
                 doc.setFont(undefined, 'bold');
                 doc.text('Score Ratio (0.00-1.00):', margin + 5, yPosition);
                 
+                const scoreRatioValue = parseFloat(data.scoreRatio);
+                let ratioColor = [76, 175, 80]; // Default Green
+                if (scoreRatioValue < 0.4) {
+                    ratioColor = [255, 77, 77]; // Red
+                } else if (scoreRatioValue < 0.6) {
+                    ratioColor = [255, 140, 0]; // Orange
+                } else if (scoreRatioValue < 0.8) {
+                    ratioColor = [255, 204, 0]; // Yellow
+                }
+
                 doc.setFontSize(18);
-                doc.setTextColor(34, 139, 34); 
+                doc.setTextColor(...ratioColor);
                 doc.text(data.scoreRatio, margin + 65, yPosition + 1);
 
                 yPosition += 9;
@@ -1607,9 +1617,19 @@
 
                         doc.text(splitText, margin + 3, yPosition);
                         
-                        const scoreText = entry.score !== null ? String(entry.score) : 'Error';
+                        const score = entry.score;
+                        const scoreText = score !== null ? String(score) : 'Error';
                         
-                        doc.setTextColor(34, 139, 34); 
+                        let scoreColor = [0, 0, 0]; // Default black
+                        switch (score) {
+                            case 1: scoreColor = [255, 77, 77]; break;   // Red
+                            case 2: scoreColor = [255, 140, 0]; break;  // Orange
+                            case 3: scoreColor = [255, 204, 0]; break;  // Yellow
+                            case 4: scoreColor = [154, 205, 50]; break; // YellowGreen
+                            case 5: scoreColor = [76, 175, 80]; break;    // Green
+                        }
+
+                        doc.setTextColor(...scoreColor); 
                         doc.setFont(undefined, 'bold');
                        
                         doc.text(scoreText, scoreX, yPosition);
