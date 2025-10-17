@@ -21,6 +21,12 @@
             --accent-green: #00ff88;
             --border-color: #2a5298;
             --border-ui: #2a2a3e;
+            /* Rating Colors */
+            --rating-1: #ff4d4d; /* Red */
+            --rating-2: #ff8c00; /* Orange */
+            --rating-3: #ffcc00; /* Yellow */
+            --rating-4: #9acd32; /* YellowGreen */
+            --rating-5: #4caf50; /* Green */
         }
 
         * {
@@ -47,16 +53,6 @@
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 0;
-                padding-top: 70px;
-            }
-            .container {
-                border-radius: 0;
-            }
         }
 
         /* --- Header --- */
@@ -145,11 +141,18 @@
         }
 
         .rating-guide span {
-            background: var(--bg-main);
             padding: 5px 12px;
             border-radius: 5px;
             font-size: 0.85em;
+            color: #fff;
+            font-weight: bold;
         }
+        .rg-1 { background: var(--rating-1); }
+        .rg-2 { background: var(--rating-2); }
+        .rg-3 { background: var(--rating-3); color: #333; }
+        .rg-4 { background: var(--rating-4); }
+        .rg-5 { background: var(--rating-5); }
+
 
         /* --- Controls & Buttons --- */
         .controls {
@@ -172,10 +175,10 @@
 
 
         .btn {
-            padding: 12px 24px;
+            padding: 12px 20px;
             border: none;
             border-radius: 8px;
-            font-size: 1em;
+            font-size: 0.9em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -190,159 +193,41 @@
             transform: none !important;
         }
 
-        /* Button Gradients (Restored from original request) */
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn-primary.top-ten {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .btn-primary.top-ten:hover:not(:disabled) {
-            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
-            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: #ffffff;
-        }
-
-        .btn-success:hover:not(:disabled) {
-            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(56, 239, 125, 0.5);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #fc6c8f 0%, #ffb88c 100%);
-            color: #ffffff;
-        }
-
-        .btn-warning:hover:not(:disabled) {
-            background: linear-gradient(135deg, #ffb88c 0%, #fc6c8f 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(252, 108, 143, 0.5);
-        }
-
-        /* Specific Export Button Styles */
-        .btn-success.excel {
-            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
-        }
-
-        .btn-success.excel:hover:not(:disabled) {
-            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5);
-        }
-
-        .btn-success.csv {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .btn-success.csv:hover:not(:disabled) {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5);
-        }
-
-        .btn-warning.pdf {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        }
-
-        .btn-warning.pdf:hover:not(:disabled) {
-            background: linear-gradient(135deg, #fee140 0%, #fa709a 100%);
-            box-shadow: 0 8px 25px rgba(254, 225, 64, 0.5);
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            color: #ffffff;
-        }
-
-        .btn-danger:hover:not(:disabled) {
-            background: linear-gradient(135deg, #f45c43 0%, #eb3349 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(235, 51, 73, 0.5);
-        }
+        /* Button Gradients */
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; }
+        .btn-primary:hover:not(:disabled) { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5); }
+        .btn-primary.top-ten { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .btn-primary.top-ten:hover:not(:disabled) { background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%); box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5); }
+        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: #ffffff; }
+        .btn-success:hover:not(:disabled) { background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 239, 125, 0.5); }
+        .btn-warning { background: linear-gradient(135deg, #fc6c8f 0%, #ffb88c 100%); color: #ffffff; }
+        .btn-warning:hover:not(:disabled) { background: linear-gradient(135deg, #ffb88c 0%, #fc6c8f 100%); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(252, 108, 143, 0.5); }
+        .btn-success.excel { background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%); }
+        .btn-success.excel:hover:not(:disabled) { background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5); }
+        .btn-success.csv { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .btn-success.csv:hover:not(:disabled) { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5); }
+        .btn-warning.pdf { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .btn-warning.pdf:hover:not(:disabled) { background: linear-gradient(135deg, #fee140 0%, #fa709a 100%); box-shadow: 0 8px 25px rgba(254, 225, 64, 0.5); }
+        .btn-danger { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); color: #ffffff; }
+        .btn-danger:hover:not(:disabled) { background: linear-gradient(135deg, #f45c43 0%, #eb3349 100%); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(235, 51, 73, 0.5); }
 
         /* --- Content & Categories --- */
-        .content {
-            padding: 30px;
-        }
+        .content { padding: 30px; }
+        .category { margin-bottom: 30px; background: var(--bg-main); border-radius: 10px; padding: 20px; border-left: 4px solid var(--accent-blue); transition: all 0.3s ease; }
+        .category:hover { background: #1e1e2e; box-shadow: 0 5px 20px rgba(0, 217, 255, 0.1); }
+        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; padding: 10px; border-radius: 8px; transition: background 0.3s ease; }
+        .category-header:hover { background: var(--bg-element); }
+        .category-title { font-size: 1.4em; font-weight: 700; color: var(--accent-blue); text-shadow: 0 0 10px rgba(0, 217, 255, 0.3); }
+        .category-count { background: var(--accent-blue); color: var(--bg-container); padding: 4px 12px; border-radius: 20px; font-size: 0.9em; font-weight: 600; }
+        .category-items { display: block; }
+        .category-items.collapsed { display: none; }
+        .toggle-icon { font-size: 1.2em; transition: transform 0.3s ease; }
+        .toggle-icon.collapsed { transform: rotate(-90deg); }
 
-        .category {
-            margin-bottom: 30px;
-            background: var(--bg-main);
-            border-radius: 10px;
-            padding: 20px;
-            border-left: 4px solid var(--accent-blue);
-            transition: all 0.3s ease;
-        }
-
-        .category:hover {
-            background: #1e1e2e;
-            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.1);
-        }
-
-        .category-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-
-        .category-header:hover {
-            background: var(--bg-element);
-        }
-
-        .category-title {
-            font-size: 1.4em;
-            font-weight: 700;
-            color: var(--accent-blue);
-            text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
-        }
-
-        .category-count {
-            background: var(--accent-blue);
-            color: var(--bg-container);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-
-        .category-items {
-            display: block;
-        }
-
-        .category-items.collapsed {
-            display: none;
-        }
-
-        .toggle-icon {
-            font-size: 1.2em;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-icon.collapsed {
-            transform: rotate(-90deg);
-        }
-
-        /* --- Checklist Item, Selection & Rating Controls --- */
+        /* --- Checklist Item, Selection & Rating Controls (Updated for Responsiveness) --- */
         .checklist-item {
             display: flex;
-            align-items: center; /* Vertically center checkbox, label, and rating */
+            align-items: center;
             padding: 15px;
             background: var(--bg-element);
             border-radius: 6px;
@@ -354,27 +239,33 @@
             background: var(--bg-element-hover);
         }
 
-        /* Selection Checkbox (Restored) */
+        /* Container for checkbox and label */
+        .item-selection-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        /* Selection Checkbox */
         .checklist-item input[type="checkbox"] {
             margin-right: 15px;
             width: 20px;
             height: 20px;
             cursor: pointer;
             accent-color: var(--accent-blue);
-            flex-shrink: 0; /* Prevent checkbox from shrinking */
+            flex-shrink: 0;
         }
 
         .item-label {
             flex: 1;
             color: #d0d0d0;
             font-size: 0.95em;
-            padding-right: 20px;
-            cursor: pointer; /* Make label clickable */
+            cursor: pointer;
         }
 
         /* Visual feedback for selected items */
         .checklist-item.selected {
-            background: #2a3a4a; /* Darker background for selected */
+            background: #2a3a4a;
             border-left: 3px solid var(--accent-green);
         }
 
@@ -388,32 +279,26 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            flex-shrink: 0; /* Prevent rating controls from shrinking */
+            flex-shrink: 0;
         }
 
         /* Style for disabled rating container (when checkbox is unchecked) */
         .rating-container.disabled {
             opacity: 0.4;
-            pointer-events: none; /* Prevents interaction with inputs/sliders */
+            pointer-events: none;
         }
 
         .slider-container {
-            width: 120px;
-            transition: opacity 0.3s ease, visibility 0.3s ease, width 0.3s ease;
+            width: 150px; /* Increased width slightly for better desktop usability */
+            transition: opacity 0.3s ease;
         }
 
-        /* Hide slider by default (unscored state) */
-        .rating-container.unscored .slider-container {
-            opacity: 0;
-            visibility: hidden;
-            width: 0;
-            margin-right: -15px; /* Compensate for the gap when hidden */
-        }
+        /* The slider is now always visible if enabled (no longer hidden by 'unscored' class) */
 
         .rating-slider {
             width: 100%;
             cursor: pointer;
-            accent-color: var(--accent-blue);
+            /* Accent color is dynamically controlled by JavaScript */
         }
 
         .rating-input {
@@ -425,13 +310,14 @@
             background: var(--bg-container);
             color: var(--text-primary);
             font-size: 1em;
-            cursor: pointer;
+            cursor: text; /* Cursor is always text now as activation is handled by checkbox */
         }
 
-        /* Style for unscored input */
+        /* Style for unscored input (applies when deselected) */
         .rating-container.unscored .rating-input {
             color: #7a7a8e;
             font-style: italic;
+            border-color: var(--border-color);
         }
         
         /* Style for scored input */
@@ -439,7 +325,6 @@
             color: var(--accent-green);
             font-weight: bold;
             border-color: var(--accent-green);
-            cursor: text;
         }
 
         .rating-input:focus {
@@ -448,16 +333,67 @@
             box-shadow: 0 0 5px rgba(0, 217, 255, 0.5);
         }
 
-        /* --- Filtering (Restored) --- */
-        /* Hide unselected items when filter is active */
-        .filter-active .checklist-item:not(.selected) {
-            display: none;
+        /* --- Responsive Design Adjustments (Mobile Layout) --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                padding-top: 80px;
+            }
+            .container {
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content, .info-box, .narrative-section {
+                margin-left: 15px;
+                margin-right: 15px;
+                padding: 15px;
+            }
+            
+            .controls, .program-details {
+                 padding: 15px;
+            }
+
+            /* Hide the number input box on small screens */
+            .rating-input {
+                display: none;
+            }
+
+            /* Adjust layout for checklist items */
+            .checklist-item {
+                /* Change from flex-row (default) to column layout */
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px 10px;
+            }
+
+            .item-selection-container {
+                width: 100%; /* Ensure the label/checkbox take full width */
+            }
+
+            .item-label {
+                padding-right: 0;
+            }
+
+            /* Move the rating container below the label */
+            .rating-container {
+                width: 100%;
+                margin-top: 12px;
+                padding-left: 35px; /* Indent slightly to align with text */
+            }
+
+            .slider-container {
+                width: 100%; /* Make the slider take the available width */
+            }
         }
 
-        /* Hide empty categories when filter is active */
-        .filter-active .category:not(.has-selected) {
-            display: none;
-        }
+
+        /* --- Filtering --- */
+        .filter-active .checklist-item:not(.selected) { display: none; }
+        .filter-active .category:not(.has-selected) { display: none; }
 
         /* --- Sticky Score Display --- */
         .sticky-score-header {
@@ -494,103 +430,45 @@
             margin-left: 15px;
         }
 
-        /* --- Narrative Comments --- */
-        .narrative-section {
-            padding: 30px;
-            background: var(--bg-main);
-            margin: 0 30px 30px 30px;
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-yellow);
+        @media (max-width: 768px) {
+             .sticky-score-header {
+                padding: 10px 15px;
+            }
+            .score-display {
+                font-size: 1em;
+                text-align: center;
+            }
+             .score-details {
+                display: block;
+                margin-left: 0;
+                margin-top: 5px;
+                text-align: center;
+            }
         }
 
-        .narrative-section h3 {
-            color: var(--accent-yellow);
-            margin-bottom: 10px;
-        }
-
-        .narrative-section p {
-            color: var(--text-secondary);
-            font-size: 0.9em;
-            margin-bottom: 15px;
-        }
-
-        #narrativeComments {
-            width: 100%;
-            min-height: 150px;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-container);
-            color: var(--text-primary);
-            font-size: 1em;
-            resize: vertical;
-        }
-
-        #narrativeComments:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
-        }
-
-        /* --- Footer & Copyright --- */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--bg-container);
-            color: #7a7a8e;
-            font-size: 0.9em;
-            border-top: 1px solid var(--border-ui);
-        }
+        /* --- Narrative Comments & Footer --- */
+        .narrative-section { padding: 30px; background: var(--bg-main); margin: 0 30px 30px 30px; border-radius: 10px; border-left: 4px solid var(--accent-yellow); }
+        .narrative-section h3 { color: var(--accent-yellow); margin-bottom: 10px; }
+        .narrative-section p { color: var(--text-secondary); font-size: 0.9em; margin-bottom: 15px; }
+        #narrativeComments { width: 100%; min-height: 150px; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-container); color: var(--text-primary); font-size: 1em; resize: vertical; }
+        #narrativeComments:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(0, 217, 255, 0.3); }
+        .footer { text-align: center; padding: 20px; background: var(--bg-container); color: #7a7a8e; font-size: 0.9em; border-top: 1px solid var(--border-ui); }
 
         /* --- Utilities & Misc --- */
-        ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-main);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent-blue);
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00fff2;
-        }
-
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transform: translateY(150%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            font-weight: 600;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-        }
-
-        .toast.error {
-            background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%);
-        }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00fff2; }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); transform: translateY(150%); transition: transform 0.3s ease; z-index: 1000; font-weight: 600; }
+        .toast.show { transform: translateY(0); }
+        .toast.error { background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%); }
     </style>
 </head>
 <body>
     <div class="sticky-score-header">
         <div class="score-display">
-            Summative Score: <span class="score-value" id="summativeScore">0</span>
-            <span class="score-details">(<span id="scoredCount">0</span> rated / <span id="selectedCount">0</span> selected / <span id="totalCount">0</span> total)</span>
+            Score Ratio: <span class="score-value" id="scoreRatio">0.00</span>
+            <span class="score-details">(<span id="totalScore">0</span> pts / <span id="maxPossibleScore">0</span> max pts) • (<span id="scoredCount">0</span> rated / <span id="selectedCount">0</span> selected)</span>
         </div>
     </div>
 
@@ -602,33 +480,33 @@
 
         <div class="program-details">
             <div class="input-group">
-                <label for="programName">Program Name</label>
+                <label for="programName">Program Name (Program 1)</label>
                 <input type="text" id="programName" placeholder="e.g., University Hospital IM">
             </div>
             <div class="input-group">
-                <label for="interviewDate">Interview Date</label>
+                <label for="interviewDate">Interview Date (Program 1)</label>
                 <input type="date" id="interviewDate">
             </div>
         </div>
 
         <div class="info-box">
             <h3>📝 How to Use This Tool</h3>
-            <p><strong>1. Select Criteria:</strong> Check the boxes for criteria important to YOU. Use the preset buttons (Top 10/25) for a quick start. Rating is enabled only for selected items.</p>
-            <p><strong>2. Rate the Program:</strong> For selected criteria, click the score field ("--") to activate the rating (defaults to 3). Adjust the slider or type (1-5).</p>
+             <p><strong>1. Select Criteria:</strong> Check the boxes for criteria important to YOU. Selected items default to 3 (Average).</p>
+            <p><strong>2. Rate Program 1:</strong> Adjust the slider (or use the number input on desktop) to rate the program.</p>
+             <p><strong>3. Export & Compare:</strong> Export to Excel/CSV to generate a comparison matrix for up to 15 programs.</p>
             <div class="rating-guide">
-                <span>1 = Poor</span>
-                <span>2 = Below Average</span>
-                <span>3 = Average</span>
-                <span>4 = Good</span>
-                <span>5 = Excellent</span>
+                <span class="rg-1">1 = Poor</span>
+                <span class="rg-2">2 = Below Avg</span>
+                <span class="rg-3">3 = Average</span>
+                <span class="rg-4">4 = Good</span>
+                <span class="rg-5">5 = Excellent</span>
             </div>
-            <p style="margin-top: 10px;"><strong>✓ Complete within 24 hours</strong> of your interview to capture fresh impressions.</p>
         </div>
 
         <div class="controls top-controls">
-            <button class="btn btn-primary" onclick="selectTop25()">⭐ Select Top 25 Most Common</button>
-            <button class="btn btn-primary top-ten" onclick="selectTopTen()">⚡ Select Top 10 Essential</button>
-            <button class="btn btn-success" onclick="selectAll()">✓ Select All Criteria</button>
+            <button class="btn btn-primary" onclick="selectTop25()">⭐ Top 25</button>
+            <button class="btn btn-primary top-ten" onclick="selectTopTen()">⚡ Top 10</button>
+            <button class="btn btn-success" onclick="selectAll()">✓ Select All</button>
             <button class="btn btn-danger" onclick="deselectAll()">✗ Deselect All</button>
             <button class="btn btn-warning" onclick="toggleFilter()" id="filterBtn">👁️ Hide Unselected</button>
         </div>
@@ -638,15 +516,15 @@
         </div>
 
         <div class="narrative-section">
-            <h3>💬 Narrative Comments</h3>
+            <h3>💬 Narrative Comments (Program 1)</h3>
             <p>Record your first memories, gut reactions, and key takeaways from the interview day (within the first 24 hours).</p>
             <textarea id="narrativeComments" placeholder="Enter your immediate thoughts and feelings here..."></textarea>
         </div>
 
         <div class="controls bottom-controls">
-            <button class="btn btn-success excel" onclick="exportToExcel()" id="excelBtn">📊 Export to Excel</button>
-            <button class="btn btn-success csv" onclick="exportToCSV()" id="csvBtn">📄 Export to CSV</button>
-            <button class="btn btn-warning pdf" onclick="exportToPDF()" id="pdfBtn">📑 Save as PDF</button>
+            <button class="btn btn-success excel" onclick="exportToExcel()" id="excelBtn">📊 Export (Excel)</button>
+            <button class="btn btn-success csv" onclick="exportToCSV()" id="csvBtn">📄 Export (CSV)</button>
+            <button class="btn btn-warning pdf" onclick="exportToPDF()" id="pdfBtn">📑 Export (PDF)</button>
             <button class="btn btn-danger" onclick="resetForm()">🔄 Reset Form</button>
         </div>
 
@@ -913,8 +791,11 @@
         let scores = {}; // Stores scores. Key format: "Category|||Item"
         let selectedItems = new Set(); // Stores keys of selected items
         let filterActive = false; // Tracks if "Hide Unselected" is active
+        let totalItemsCount = 0; // Global count of all items
 
         const COPYRIGHT_TEXT = "© 2025 DocBray Foundation. All rights reserved.";
+        const MAX_SCORE_PER_ITEM = 5;
+        const MAX_PROGRAMS = 15; // Number of columns for the matrix
 
         function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
@@ -925,23 +806,35 @@
             }, 3000);
         }
 
-        // --- Initialization ---
+        // Helper function to get color based on score (NEW)
+        function getScoreColor(score) {
+            switch (score) {
+                case 1: return 'var(--rating-1)';
+                case 2: return 'var(--rating-2)';
+                case 3: return 'var(--rating-3)';
+                case 4: return 'var(--rating-4)';
+                case 5: return 'var(--rating-5)';
+                default: return 'var(--accent-blue)'; // Default color when unscored/deselected
+            }
+        }
+
+        // --- Initialization & UI Functions ---
 
         function initializeChecklist() {
             const panel = document.getElementById('checklistPanel');
             panel.innerHTML = ''; // Clear existing content
             scores = {}; // Reset scores object
             selectedItems.clear(); // Reset selections
-            let totalItems = 0;
+            totalItemsCount = 0; // Reset total count
 
             Object.keys(checklistData).forEach((category, index) => {
                 const items = checklistData[category];
-                totalItems += items.length;
+                totalItemsCount += items.length;
 
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'category';
                 
-                // Generate HTML for items
+                // Generate HTML for items (UPDATED structure for responsiveness)
                 categoryDiv.innerHTML = `
                     <div class="category-header" onclick="toggleCategory('category-${index}')">
                         <h3 class="category-title">${category}</h3>
@@ -953,22 +846,23 @@
                     <div class="category-items" id="category-${index}">
                         ${items.map((item, itemIndex) => {
                             const itemId = `item-${index}-${itemIndex}`;
-                            // Escape single quotes for the JavaScript key string
                             const escapedItem = item.replace(/'/g, "\\'");
                             const key = `${category}|||${escapedItem}`;
-                            // Initialize score as null (unscored)
                             scores[key] = null; 
                             
-                            // Note: Rating container starts disabled and unscored as checkboxes are unchecked by default
+                            // Rating container starts disabled. 'unscored' class is kept for input styling consistency.
                             return `
                             <div class="checklist-item" id="wrapper-${itemId}">
-                                <input type="checkbox" id="checkbox-${itemId}" 
-                                       onchange="handleSelectionChange('${key}', '${itemId}', this.checked)">
-                                <label class="item-label" for="checkbox-${itemId}">${item}</label>
+                                <div class="item-selection-container">
+                                    <input type="checkbox" id="checkbox-${itemId}" 
+                                           onchange="handleSelectionChange('${key}', '${itemId}', this.checked)">
+                                    <label class="item-label" for="checkbox-${itemId}">${item}</label>
+                                </div>
                                 <div class="rating-container unscored disabled" id="container-${itemId}">
                                     <div class="slider-container">
-                                        <input type="range" min="1" max="5" value="3" class="rating-slider" id="slider-${itemId}"
-                                               oninput="handleSliderChange('${key}', '${itemId}')">
+                                        <input type="range" min="1" max="${MAX_SCORE_PER_ITEM}" value="3" class="rating-slider" id="slider-${itemId}"
+                                               oninput="handleSliderChange('${key}', '${itemId}')"
+                                               style="accent-color: ${getScoreColor(null)}">
                                     </div>
                                     <input type="text" value="--" inputmode="numeric" class="rating-input" id="input-${itemId}"
                                            onfocus="handleInputFocus('${key}', '${itemId}')"
@@ -982,46 +876,19 @@
                 panel.appendChild(categoryDiv);
             });
 
-            document.getElementById('totalCount').textContent = totalItems;
             updateSummary();
             updateFilterClasses();
         }
 
+        // (toggleCategory, updateFilterClasses, toggleFilter remain the same)
         function toggleCategory(categoryId) {
             const items = document.getElementById(categoryId);
             const icon = document.getElementById('icon-' + categoryId);
-            
             items.classList.toggle('collapsed');
             icon.classList.toggle('collapsed');
         }
 
-        // --- Selection Handlers (Restored and Integrated) ---
-
-        // Handles checkbox changes
-        function handleSelectionChange(key, itemId, isChecked) {
-            const ratingContainer = document.getElementById(`container-${itemId}`);
-            
-            if (isChecked) {
-                selectedItems.add(key);
-                // Enable rating controls
-                ratingContainer.classList.remove('disabled');
-            } else {
-                selectedItems.delete(key);
-                // Disable rating controls and reset score for this item when deselected
-                ratingContainer.classList.add('disabled');
-                // Reset score only if it was previously scored
-                if (scores[key] !== null) {
-                    updateScore(key, null, itemId);
-                }
-            }
-            
-            updateSummary();
-            updateFilterClasses();
-        }
-
-        // Updates CSS classes for filtering visualization
         function updateFilterClasses() {
-            // Update selected class on all checklist items
             document.querySelectorAll('.checklist-item').forEach(item => {
                 const checkbox = item.querySelector('input[type="checkbox"]');
                 if (checkbox && checkbox.checked) {
@@ -1030,8 +897,6 @@
                     item.classList.remove('selected');
                 }
             });
-
-            // Update has-selected class on categories
             document.querySelectorAll('.category').forEach(category => {
                 const hasSelected = category.querySelector('.checklist-item.selected');
                 if (hasSelected) {
@@ -1046,11 +911,9 @@
             filterActive = !filterActive;
             const container = document.querySelector('.container');
             const btn = document.getElementById('filterBtn');
-            
             if (filterActive) {
                 container.classList.add('filter-active');
                 btn.textContent = '👁️ Show All';
-                // Swap button styles when active
                 btn.classList.remove('btn-warning');
                 btn.classList.add('btn-primary');
                 showToast('📌 Showing only selected criteria');
@@ -1063,11 +926,40 @@
             }
         }
 
+
+        // Handles checkbox changes (UPDATED: Defaults to 3 on selection)
+        function handleSelectionChange(key, itemId, isChecked) {
+            const ratingContainer = document.getElementById(`container-${itemId}`);
+            
+            if (isChecked) {
+                selectedItems.add(key);
+                ratingContainer.classList.remove('disabled');
+
+                // If the score is currently null (unscored), default it to 3 (Average)
+                // This simplifies activation for both mobile and desktop.
+                if (scores[key] === null) {
+                    updateScore(key, 3, itemId);
+                }
+
+            } else {
+                selectedItems.delete(key);
+                ratingContainer.classList.add('disabled');
+                // Reset score when deselected
+                if (scores[key] !== null) {
+                    updateScore(key, null, itemId);
+                }
+            }
+            
+            updateSummary();
+            updateFilterClasses();
+        }
+
         // Helper function to trigger selection updates programmatically (for buttons)
         function programmaticSelect(criteriaList = null, selectAll = false) {
             // We need to iterate over the DOM elements because the buttons rely on the text labels
             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                 const itemId = checkbox.id.replace('checkbox-', '');
+                // Updated selector due to HTML structure change
                 const labelElement = document.querySelector(`label[for="checkbox-${itemId}"]`);
                 const labelText = labelElement.textContent;
 
@@ -1082,7 +974,6 @@
                     checkbox.checked = shouldBeChecked;
                     
                     // We must manually construct the key to call handleSelectionChange
-                    // Find the category by looking at the DOM structure
                     const categoryElement = checkbox.closest('.category');
                     const categoryTitle = categoryElement.querySelector('.category-title').textContent;
                     const escapedItem = labelText.replace(/'/g, "\\'");
@@ -1091,84 +982,33 @@
                     handleSelectionChange(key, itemId, shouldBeChecked);
                 }
             });
-            // Summary and filter classes are updated within the loop/handler for accuracy
         }
 
-        function selectAll() {
-            programmaticSelect(null, true);
-            showToast('✅ All criteria selected');
-        }
-
-        function deselectAll() {
-            programmaticSelect([], false); // Pass empty array and false to deselect all
-            showToast('✅ All criteria deselected');
-        }
-
+        // (Selection Button functions remain the same)
+        function selectAll() { programmaticSelect(null, true); showToast('✅ All criteria selected and rated 3'); }
+        function deselectAll() { programmaticSelect([], false); showToast('✅ All criteria deselected'); }
         function selectTop25() {
             const top25Factors = [
-                "Overall curriculum quality and structure",
-                "Board certification pass rates for graduates (>80% ACGME minimum; >90% excellent)",
-                "Conference quality (morning report, noon conference, grand rounds)",
-                "Point-of-care ultrasound (POCUS) training",
-                "Protected time for conferences and education",
-                "Faculty availability and approachability",
-                "Clinical and teaching skills of faculty",
-                "Attending rounds frequency (2-3x weekly minimum on inpatient)",
-                "Primary training site reputation",
-                "EMR system consistency across sites (Epic, Cerner, etc.)",
-                "Resident morale and happiness",
-                "Would residents choose program again?",
-                "Collaborative vs. competitive environment",
-                "Resident retention rate (>98% excellent for IM)",
-                "Actual work hours vs. stated policy (<80 hours/week)",
-                "Call schedule type (night float, 24-hour, hybrid)",
-                "Post-call policies (time off after overnight)",
-                "Salary for PGY-1, PGY-2, PGY-3",
-                "Parental leave duration (6+ weeks minimum; 12+ ideal)",
-                "Moonlighting permitted (internal and/or external)",
-                "Urban, suburban, or rural setting",
-                "Cost of living and housing affordability",
-                "Fellowship match rates and support",
-                "Alignment with career goals (hospitalist vs. subspecialist vs. primary care)",
-                "Overall gut feeling about fit and thriving potential"
+                "Overall curriculum quality and structure", "Board certification pass rates for graduates (>80% ACGME minimum; >90% excellent)", "Conference quality (morning report, noon conference, grand rounds)", "Point-of-care ultrasound (POCUS) training", "Protected time for conferences and education", "Faculty availability and approachability", "Clinical and teaching skills of faculty", "Attending rounds frequency (2-3x weekly minimum on inpatient)", "Primary training site reputation", "EMR system consistency across sites (Epic, Cerner, etc.)", "Resident morale and happiness", "Would residents choose program again?", "Collaborative vs. competitive environment", "Resident retention rate (>98% excellent for IM)", "Actual work hours vs. stated policy (<80 hours/week)", "Call schedule type (night float, 24-hour, hybrid)", "Post-call policies (time off after overnight)", "Salary for PGY-1, PGY-2, PGY-3", "Parental leave duration (6+ weeks minimum; 12+ ideal)", "Moonlighting permitted (internal and/or external)", "Urban, suburban, or rural setting", "Cost of living and housing affordability", "Fellowship match rates and support", "Alignment with career goals (hospitalist vs. subspecialist vs. primary care)", "Overall gut feeling about fit and thriving potential"
             ];
             programmaticSelect(top25Factors);
-            showToast('✅ Selected 25 most common criteria');
+            showToast('✅ Selected Top 25 criteria');
         }
-
         function selectTopTen() {
             const topTenFactors = [
-                "Resident morale and happiness",
-                "Urban, suburban, or rural setting",
-                "Fellowship match rates and support",
-                "Board certification pass rates for graduates (>80% ACGME minimum; >90% excellent)",
-                "Salary for PGY-1, PGY-2, PGY-3",
-                "Actual work hours vs. stated policy (<80 hours/week)",
-                "Faculty availability and approachability",
-                "Overall curriculum quality and structure",
-                "Primary training site reputation",
-                "Overall gut feeling about fit and thriving potential"
+                "Resident morale and happiness", "Urban, suburban, or rural setting", "Fellowship match rates and support", "Board certification pass rates for graduates (>80% ACGME minimum; >90% excellent)", "Salary for PGY-1, PGY-2, PGY-3", "Actual work hours vs. stated policy (<80 hours/week)", "Faculty availability and approachability", "Overall curriculum quality and structure", "Primary training site reputation", "Overall gut feeling about fit and thriving potential"
             ];
             programmaticSelect(topTenFactors);
-            showToast('✅ Selected 10 essential criteria');
+            showToast('✅ Selected Top 10 criteria');
         }
 
         // --- Scoring Handlers ---
 
-        // When user focuses the input field (activating the rating)
+        // When user focuses the input field (Desktop only)
         function handleInputFocus(key, itemId) {
-            const container = document.getElementById(`container-${itemId}`);
             const input = document.getElementById(`input-${itemId}`);
-            
-            // Ensure item is selected before allowing scoring (safety check, UI should prevent this via 'disabled')
+            // Ensure item is selected before allowing scoring
             if (!selectedItems.has(key)) return;
-
-            if (container.classList.contains('unscored')) {
-                // Activate rating: default to 3 (Average)
-                updateScore(key, 3, itemId);
-                // Ensure the input reflects the new value when focused for typing
-                input.value = 3;
-            }
             // Select the text so user can immediately type over it
             input.select();
         }
@@ -1181,26 +1021,30 @@
             updateScore(key, score, itemId);
         }
 
-        // When user manually types into the input field
+        // When user manually types into the input field (Desktop only)
         function handleInputChange(key, itemId) {
             if (!selectedItems.has(key)) return;
             const input = document.getElementById(`input-${itemId}`);
             let value = input.value.trim();
 
+            // If the user clears the field on desktop, revert to default (3) instead of allowing unscored for a selected item
             if (value === "" || value === "--") {
-                // Reset to unscored
-                updateScore(key, null, itemId);
+                updateScore(key, 3, itemId);
+                if (value !== "") {
+                     showToast('ℹ️ Selected criteria must have a rating. Reset to 3 (Average).');
+                }
                 return;
             }
 
             let score = parseInt(value);
 
-            if (isNaN(score) || score < 1 || score > 5) {
-                // Invalid input, revert to previous valid score or unscored if none
+            if (isNaN(score) || score < 1 || score > MAX_SCORE_PER_ITEM) {
+                // Invalid input, revert to previous valid score
                 const previousScore = scores[key];
-                updateScore(key, previousScore, itemId);
+                // Ensure previous score isn't null (shouldn't happen if selected, but safe check)
+                updateScore(key, previousScore !== null ? previousScore : 3, itemId);
                 if (value !== "") {
-                     showToast('⚠️ Please enter a number between 1 and 5.', true);
+                     showToast(`⚠️ Please enter a number between 1 and ${MAX_SCORE_PER_ITEM}.`, true);
                 }
             } else {
                 // Valid input
@@ -1208,137 +1052,131 @@
             }
         }
 
-        // Prevent invalid keystrokes and handle Enter key behavior
+        // (handleInputKeydown remains the same)
         function handleInputKeydown(event, itemId) {
-            // Allow control keys
-            if (event.key === 'Backspace' || event.key === 'Delete' || event.key.startsWith('Arrow') || event.key === 'Tab') {
-                return;
-            }
-
-            // Handle Enter key
+            if (event.key === 'Backspace' || event.key === 'Delete' || event.key.startsWith('Arrow') || event.key === 'Tab') return;
             if (event.key === 'Enter') {
                 document.getElementById(`input-${itemId}`).blur(); 
                 event.preventDefault();
                 return;
             }
-            
-            // Allow only numbers 1 through 5
             if (!/^[1-5]$/.test(event.key)) {
                 event.preventDefault();
             }
         }
 
-        // Central function to update the score in memory and UI
+        // Central function to update the score (UPDATED: Includes color update)
         function updateScore(key, score, itemId) {
             const container = document.getElementById(`container-${itemId}`);
             const input = document.getElementById(`input-${itemId}`);
             const slider = document.getElementById(`slider-${itemId}`);
 
-            // Prevent updating score if the elements don't exist (e.g., during rapid reset)
+            // Prevent updating score if the elements don't exist
             if (!container || !input || !slider) return;
 
             scores[key] = score;
 
             if (score === null) {
-                // Unscored state
+                // Unscored state (occurs when deselected)
                 container.classList.add('unscored');
                 input.value = "--";
-                slider.value = 3; // Reset slider position
+                slider.value = 3; // Reset slider position visually
+                slider.style.accentColor = getScoreColor(null); // Reset color
             } else {
                 // Scored state
                 container.classList.remove('unscored');
                 input.value = score;
                 slider.value = score;
+                // Update slider color (NEW)
+                slider.style.accentColor = getScoreColor(score);
             }
 
             updateSummary();
         }
 
-        // Update the summative score display (Updated logic for selection integration)
+        // (updateSummary remains the same)
         function updateSummary() {
-            let totalScore = 0;
+            let totalScoreAccumulated = 0;
             let scoredCount = 0;
             let selectedCount = selectedItems.size;
 
-            // Iterate over selected items and check if they have a score
             selectedItems.forEach(key => {
+                 // Since we default to 3, all selected items are considered "scored" if not null
                  if (scores[key] !== null && scores[key] !== undefined) {
-                    totalScore += scores[key];
+                    totalScoreAccumulated += scores[key];
                     scoredCount++;
                 }
             });
 
-            document.getElementById('summativeScore').textContent = totalScore;
+            const maxPossibleScore = selectedCount * MAX_SCORE_PER_ITEM;
+
+            let scoreRatio = 0;
+            if (maxPossibleScore > 0) {
+                scoreRatio = totalScoreAccumulated / maxPossibleScore;
+            }
+
+            document.getElementById('scoreRatio').textContent = scoreRatio.toFixed(2);
+            document.getElementById('totalScore').textContent = totalScoreAccumulated;
+            document.getElementById('maxPossibleScore').textContent = maxPossibleScore;
             document.getElementById('scoredCount').textContent = scoredCount;
             document.getElementById('selectedCount').textContent = selectedCount;
         }
         
-        // Reset the entire form
+        // (resetForm remains the same)
         function resetForm() {
             if (confirm("Are you sure you want to reset the form? All selections, scores, details, and comments will be cleared.")) {
                 document.getElementById('programName').value = "";
                 document.getElementById('narrativeComments').value = "";
-                
-                // Reset date
                 setDefaultDate();
-                
-                // If filter is active, deactivate it before resetting
                 if (filterActive) {
                     toggleFilter();
                 }
-
-                initializeChecklist(); // Re-initializes everything
+                initializeChecklist();
                 showToast('✅ Form reset successfully!');
             }
         }
 
-        // --- Data Retrieval for Export (Updated logic for selection integration) ---
+        // --- Data Retrieval for Export ---
+        // (getExportData remains the same)
         function getExportData() {
-            const programName = document.getElementById('programName').value.trim() || "[Not Specified]";
-            const interviewDate = document.getElementById('interviewDate').value || "[Not Specified]";
+            const programName = document.getElementById('programName').value.trim();
+            const interviewDate = document.getElementById('interviewDate').value;
             const narrativeComments = document.getElementById('narrativeComments').value.trim();
-            const summativeScore = document.getElementById('summativeScore').textContent;
+            
+            const scoreRatio = document.getElementById('scoreRatio').textContent;
+            const totalScore = document.getElementById('totalScore').textContent;
+            const maxPossibleScore = document.getElementById('maxPossibleScore').textContent;
             const scoredCount = document.getElementById('scoredCount').textContent;
             const selectedCount = document.getElementById('selectedCount').textContent;
-            const totalCount = document.getElementById('totalCount').textContent;
-
-
+            
             const itemsByCategory = {};
 
-            // Iterate through the original data structure to maintain order, but only include selected items
              Object.keys(checklistData).forEach(category => {
                 checklistData[category].forEach(item => {
                     const escapedItem = item.replace(/'/g, "\\'");
                     const key = `${category}|||${escapedItem}`;
                     
                     if (selectedItems.has(key)) {
-                        // Initialize category array if it doesn't exist yet
                         if (!itemsByCategory[category]) {
                             itemsByCategory[category] = [];
                         }
-
                         const score = scores[key];
                         itemsByCategory[category].push({
-                            item: item, // Use original item text for export
-                            score: score // Keep as number or null
+                            item: item,
+                            score: score
                         });
                     }
                 });
             });
 
             return {
-                programName,
-                interviewDate,
-                narrativeComments,
-                summativeScore,
-                scoredCount,
-                selectedCount,
-                totalCount,
-                itemsByCategory
+                programName, interviewDate, narrativeComments, scoreRatio, totalScore, maxPossibleScore, scoredCount, selectedCount, totalCount: totalItemsCount, itemsByCategory
             };
         }
         
-        // --- Export Functions ---
+        // --- Export Functions (Excel, CSV, PDF) ---
+        
+        // (Export functions remain largely the same, but Excel/CSV logic is slightly updated because selected items are now guaranteed to have a score)
 
         function exportToExcel() {
             if (selectedItems.size === 0) {
@@ -1358,50 +1196,82 @@
 
                 const data = getExportData();
                 const wsData = [];
+                const generatedDate = new Date().toLocaleDateString();
+                const maxPossibleScoreValue = parseInt(data.maxPossibleScore);
 
-                // Header Info
-                wsData.push(['Internal Medicine Residency Program Evaluation']);
-                wsData.push(['Program Name:', data.programName]);
-                wsData.push(['Interview Date:', data.interviewDate]);
-                wsData.push(['Generated Date:', new Date().toLocaleDateString()]);
+                // --- Header Rows (Identical) ---
+                const nameRow = ['Category', 'Criteria'];
+                nameRow.push(data.programName || '[Enter Program 1 Name]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { nameRow.push(`[Enter Program ${i} Name]`); }
+                wsData.push(nameRow);
+
+                const interviewDateRow = ['Details', 'Interview Date'];
+                interviewDateRow.push(data.interviewDate || '[Enter Date]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { interviewDateRow.push('[Enter Date]'); }
+                wsData.push(interviewDateRow);
+
+                const generatedDateRow = ['Details', 'Generated Date'];
+                const isP1Populated = data.programName || data.interviewDate || data.narrativeComments;
+                generatedDateRow.push( isP1Populated ? generatedDate : '[N/A]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { generatedDateRow.push('[N/A]'); }
+                wsData.push(generatedDateRow);
+
                 wsData.push([]);
-
-                // Scores Header
-                wsData.push(['Category', 'Criteria', 'Score (1-5)']);
+                const dataStartRow = 5; 
                 
-                const dataStartRow = wsData.length + 1; // 1-based index for Excel formulas
-
-                // Add criteria and scores (data is already filtered by selection)
+                // --- Data Rows (Updated: No longer need 'Unscored' text) ---
                 Object.keys(data.itemsByCategory).forEach(category => {
                     data.itemsByCategory[category].forEach(entry => {
-                        const row = [
-                            category, 
-                            entry.item, 
-                            entry.score !== null ? entry.score : 'Unscored'
-                        ];
+                        const row = [category, entry.item];
+                        
+                        // Since we default to 3, score should not be null for selected items.
+                        const scoreValue = entry.score !== null ? entry.score : 'Error'; // Should not happen
+                        row.push(scoreValue);
+
+                        for (let i = 2; i <= MAX_PROGRAMS; i++) {
+                            row.push('');
+                        }
                         wsData.push(row);
                     });
                 });
 
                 const dataEndRow = wsData.length;
 
-                // Summary
-                wsData.push([]);
-                wsData.push(['Summary']);
-                wsData.push(['Total Criteria Available:', data.totalCount]);
-                wsData.push(['Criteria Selected:', data.selectedCount]);
-                wsData.push(['Criteria Rated:', data.scoredCount]);
-                // Use formula for Summative Score in Excel, ignoring 'Unscored' text entries
-                const formula = `SUMIF(C${dataStartRow}:C${dataEndRow}, "<>Unscored")`;
-                wsData.push(['Summative Score:', { f: formula }]);
+                // --- Summary Rows (Updated: Use SUM instead of SUMIF) ---
+                const pointsSelectedRow = ['Summary', 'Points Selected (Total)'];
+                const pointsAvailableRow = ['Summary', 'Points Available (Max)'];
+                const scoreRatioRow = ['Summary', 'Score Ratio (0.00-1.00)'];
+
+                for (let i = 0; i < MAX_PROGRAMS; i++) {
+                    const colLetter = String.fromCharCode(67 + i); // C=67 (ASCII)
+                    
+                    // Total Score Formula: SUM(Range)
+                    // Since we no longer use "Unscored" text for selected items, a simple SUM works.
+                    const sumFormula = `SUM(${colLetter}${dataStartRow}:${colLetter}${dataEndRow})`;
+                    pointsSelectedRow.push({ f: sumFormula });
+
+                    pointsAvailableRow.push(maxPossibleScoreValue);
+
+                    const totalScoreRowNum = dataEndRow + 1;
+                    const maxScoreRowNum = dataEndRow + 2;
+                    const ratioFormula = `IFERROR(${colLetter}${totalScoreRowNum} / ${colLetter}${maxScoreRowNum}, 0)`;
+                    
+                    scoreRatioRow.push({ f: ratioFormula, t: 'n', z: '0.00' });
+                }
+
+                wsData.push(pointsSelectedRow);
+                wsData.push(pointsAvailableRow);
+                wsData.push(scoreRatioRow);
+
                 wsData.push([]);
 
-                // Narrative Comments
-                wsData.push(['Narrative Comments (First 24h Reactions)']);
-                wsData.push([data.narrativeComments || 'No comments entered.']);
-                wsData.push([]);
+                // --- Narrative Comments & Footer (Identical) ---
+                const commentsRow = ['Comments', 'Narrative (First 24h)'];
+                commentsRow.push(data.narrativeComments || '[Enter Comments]');
+                 for (let i = 2; i <= MAX_PROGRAMS; i++) { commentsRow.push('[Enter Comments]'); }
+                wsData.push(commentsRow);
 
-                // Footer/Copyright
+                wsData.push([]);
                 wsData.push([COPYRIGHT_TEXT]);
                 wsData.push(['Rating Scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent']);
 
@@ -1411,22 +1281,19 @@
                 const ws = XLSX.utils.aoa_to_sheet(wsData);
 
                 // Set column widths
-                ws['!cols'] = [
-                    { wch: 35 },  // Category/Info Labels
-                    { wch: 75 },  // Criteria/Details
-                    { wch: 15 }   // Score
-                ];
+                const cols = [{ wch: 25 }, { wch: 55 }];
+                for (let i = 0; i < MAX_PROGRAMS; i++) { cols.push({ wch: 25 }); }
+                ws['!cols'] = cols;
 
-                // Add worksheet to workbook
-                XLSX.utils.book_append_sheet(wb, ws, 'Program Evaluation');
+                XLSX.utils.book_append_sheet(wb, ws, 'Program Comparison Matrix');
 
                 // Generate filename
-                const filename = `Evaluation_${data.programName.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}.xlsx`;
+                const filenamePrefix = data.programName ? `Matrix_${data.programName.replace(/[^a-z0-9]/gi, '_')}_` : 'Comparison_Matrix_';
+                const filename = `${filenamePrefix}${new Date().toISOString().split('T')[0]}.xlsx`;
                 
-                // Save file
                 XLSX.writeFile(wb, filename);
 
-                showToast('✅ Excel file downloaded successfully!');
+                showToast('✅ Excel Comparison Matrix downloaded!');
                 
             } catch (error) {
                 console.error('Excel export error:', error);
@@ -1435,7 +1302,7 @@
                 const btn = document.getElementById('excelBtn');
                 if (btn) {
                     btn.disabled = false;
-                    btn.textContent = '📊 Export to Excel';
+                    btn.textContent = '📊 Export (Excel)';
                 }
             }
         }
@@ -1452,45 +1319,84 @@
                 btn.textContent = '⏳ Generating...';
 
                 const data = getExportData();
-                let csvContent = "";
+                const generatedDate = new Date().toLocaleDateString();
 
-                // Function to escape CSV fields
-                const escapeCSV = (field) => {
+                 const escapeCSV = (field) => {
                     if (field === null || field === undefined) return '""';
                     return `"${String(field).replace(/"/g, '""')}"`;
                 };
 
-                // Header Info
-                csvContent += `${escapeCSV("Program Name")},${escapeCSV(data.programName)}\n`;
-                csvContent += `${escapeCSV("Interview Date")},${escapeCSV(data.interviewDate)}\n`;
-                csvContent += `${escapeCSV("Generated Date")},${escapeCSV(new Date().toLocaleDateString())}\n\n`;
-
-                // Summary
-                csvContent += `${escapeCSV("Summative Score")},${escapeCSV(data.summativeScore)}\n`;
-                csvContent += `${escapeCSV("Criteria Rated/Selected")},${escapeCSV(data.scoredCount)}/${escapeCSV(data.selectedCount)}\n\n`;
+                const createCSVRow = (arr) => arr.map(escapeCSV).join(',') + '\n';
                 
-                // Scores Header
-                csvContent += `${escapeCSV("Category")},${escapeCSV("Criteria")},${escapeCSV("Score (1-5)")}\n`;
+                let csvContent = "";
 
-                // Add criteria and scores (data is already filtered by selection)
-                Object.keys(data.itemsByCategory).forEach(category => {
+                // --- Header Rows ---
+                const nameRow = ['Category', 'Criteria'];
+                nameRow.push(data.programName || '[Enter Program 1 Name]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { nameRow.push(`[Enter Program ${i} Name]`); }
+                csvContent += createCSVRow(nameRow);
+
+                const interviewDateRow = ['Details', 'Interview Date'];
+                interviewDateRow.push(data.interviewDate || '[Enter Date]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { interviewDateRow.push('[Enter Date]'); }
+                csvContent += createCSVRow(interviewDateRow);
+
+                const generatedDateRow = ['Details', 'Generated Date'];
+                const isP1Populated = data.programName || data.interviewDate || data.narrativeComments;
+                generatedDateRow.push( isP1Populated ? generatedDate : '[N/A]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { generatedDateRow.push('[N/A]'); }
+                csvContent += createCSVRow(generatedDateRow);
+
+                csvContent += "\n";
+
+                // --- Data Rows (Updated: No longer need 'Unscored' text) ---
+                 Object.keys(data.itemsByCategory).forEach(category => {
                     data.itemsByCategory[category].forEach(entry => {
-                        const scoreText = entry.score !== null ? entry.score : 'Unscored';
-                        csvContent += `${escapeCSV(category)},${escapeCSV(entry.item)},${escapeCSV(scoreText)}\n`;
+                        const row = [category, entry.item];
+                        
+                        // Score should not be null
+                        const scoreText = entry.score !== null ? entry.score : 'Error'; 
+                        row.push(scoreText);
+
+                        for (let i = 2; i <= MAX_PROGRAMS; i++) {
+                            row.push('');
+                        }
+                        csvContent += createCSVRow(row);
                     });
                 });
 
-                // Narrative Comments
-                csvContent += `\n${escapeCSV("Narrative Comments (First 24h Reactions)")}\n`;
-                csvContent += `${escapeCSV(data.narrativeComments || 'No comments entered.')}\n\n`;
+                // --- Summary Rows ---
+                const pointsSelectedRow = ['Summary', 'Points Selected (Total)'];
+                pointsSelectedRow.push(data.totalScore);
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { pointsSelectedRow.push('[Calculate Total]'); }
+                csvContent += createCSVRow(pointsSelectedRow);
 
-                // Footer/Copyright
-                csvContent += `${escapeCSV(COPYRIGHT_TEXT)}\n`;
-                csvContent += `${escapeCSV("Rating Scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent")}\n`;
+                const pointsAvailableRow = ['Summary', 'Points Available (Max)'];
+                for (let i = 1; i <= MAX_PROGRAMS; i++) { pointsAvailableRow.push(data.maxPossibleScore); }
+                csvContent += createCSVRow(pointsAvailableRow);
+
+                const scoreRatioRow = ['Summary', 'Score Ratio (0.00-1.00)'];
+                 scoreRatioRow.push(data.scoreRatio);
+                 for (let i = 2; i <= MAX_PROGRAMS; i++) { scoreRatioRow.push('[Calculate Ratio]'); }
+                csvContent += createCSVRow(scoreRatioRow);
+
+                 csvContent += "\n";
+
+                // --- Narrative Comments & Footer ---
+                const commentsRow = ['Comments', 'Narrative (First 24h)'];
+                commentsRow.push(data.narrativeComments || '[Enter Comments]');
+                 for (let i = 2; i <= MAX_PROGRAMS; i++) { commentsRow.push('[Enter Comments]'); }
+                csvContent += createCSVRow(commentsRow);
+
+                 csvContent += "\n";
+                csvContent += createCSVRow([COPYRIGHT_TEXT]);
+                csvContent += createCSVRow(['Rating Scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent']);
 
                 const BOM = "\uFEFF";
                 const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-                const filename = `Evaluation_${data.programName.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
+                
+                const filenamePrefix = data.programName ? `Matrix_${data.programName.replace(/[^a-z0-9]/gi, '_')}_` : 'Comparison_Matrix_';
+                const filename = `${filenamePrefix}${new Date().toISOString().split('T')[0]}.csv`;
                 
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
@@ -1501,7 +1407,7 @@
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
 
-                showToast('✅ CSV downloaded successfully!');
+                showToast('✅ CSV Comparison Matrix downloaded!');
                 
             } catch (error) {
                 console.error('CSV export error:', error);
@@ -1510,7 +1416,7 @@
                 const btn = document.getElementById('csvBtn');
                 if (btn) {
                     btn.disabled = false;
-                    btn.textContent = '📄 Export to CSV';
+                    btn.textContent = '📄 Export (CSV)';
                 }
             }
         }
@@ -1525,7 +1431,7 @@
                 showToast('❌ PDF library not loaded. Please refresh.', true);
                 return;
             }
-
+           
             try {
                 const btn = document.getElementById('pdfBtn');
                 btn.disabled = true;
@@ -1535,6 +1441,10 @@
                 const doc = new jsPDF();
                 const data = getExportData();
 
+                const displayName = data.programName || "[Not Specified]";
+                const displayDate = data.interviewDate || "[Not Specified]";
+
+
                 let yPosition = 20;
                 const pageHeight = doc.internal.pageSize.height;
                 const pageWidth = doc.internal.pageSize.width;
@@ -1543,7 +1453,6 @@
                 const criteriaWidth = contentWidth * 0.85;
                 const scoreX = margin + criteriaWidth + 5;
 
-                // Function to add footer to every page
                 const addFooter = () => {
                     const pageCount = doc.internal.getNumberOfPages();
                     doc.setFontSize(8);
@@ -1555,60 +1464,60 @@
                     }
                 };
 
-                // Title
+                // Title & Details (Identical)
                 doc.setFontSize(18);
                 doc.setTextColor(42, 82, 152); // Blue
-                doc.text('Internal Medicine Residency Evaluation', pageWidth / 2, yPosition, { align: 'center' });
+                doc.text('Internal Medicine Residency Evaluation Report', pageWidth / 2, yPosition, { align: 'center' });
                 yPosition += 10;
                 
-                // Program Details
                 doc.setFontSize(14);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont(undefined, 'bold');
-                // Handle potentially long program names
-                const splitName = doc.splitTextToSize(data.programName, contentWidth);
+                const splitName = doc.splitTextToSize(displayName, contentWidth);
                 doc.text(splitName, pageWidth / 2, yPosition, { align: 'center' });
                 yPosition += splitName.length * 7;
 
                 doc.setFontSize(10);
                 doc.setTextColor(100, 100, 100);
                 doc.setFont(undefined, 'normal');
-                doc.text(`Interview Date: ${data.interviewDate} | Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPosition, { align: 'center' });
+                doc.text(`Interview Date: ${displayDate} | Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPosition, { align: 'center' });
                 yPosition += 15;
 
-                // Summary Box
-                doc.setFillColor(240, 248, 255); // Light blue fill
-                doc.rect(margin, yPosition, contentWidth, 25, 'F');
-                doc.setDrawColor(42, 82, 152); // Blue border
+                // Summary Box (Identical)
+                const summaryBoxHeight = 30;
+                doc.setFillColor(240, 248, 255);
+                doc.rect(margin, yPosition, contentWidth, summaryBoxHeight, 'F');
+                doc.setDrawColor(42, 82, 152);
                 doc.setLineWidth(0.5);
-                doc.rect(margin, yPosition, contentWidth, 25);
+                doc.rect(margin, yPosition, contentWidth, summaryBoxHeight);
                 
-                yPosition += 8;
-                doc.setFontSize(11);
+                yPosition += 9;
+                doc.setFontSize(12);
                 doc.setTextColor(42, 82, 152);
                 doc.setFont(undefined, 'bold');
-                doc.text('Summative Score:', margin + 5, yPosition);
+                doc.text('Score Ratio (0.00-1.00):', margin + 5, yPosition);
                 
-                doc.setFontSize(16);
-                // Using a slightly darker green for PDF visibility
+                doc.setFontSize(18);
                 doc.setTextColor(34, 139, 34); 
-                doc.text(data.summativeScore, margin + 45, yPosition + 1);
+                doc.text(data.scoreRatio, margin + 65, yPosition + 1);
 
-                yPosition += 8;
+                yPosition += 9;
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont(undefined, 'normal');
-                doc.text(`Criteria Rated: ${data.scoredCount} / ${data.selectedCount} (Selected)`, margin + 5, yPosition);
+                doc.text(`Total Points: ${data.totalScore} / ${data.maxPossibleScore} (Max Possible)`, margin + 5, yPosition);
                 
+                yPosition += 7;
+                doc.text(`Criteria Rated: ${data.scoredCount} / ${data.selectedCount} (Selected)`, margin + 5, yPosition);
+
                 yPosition += 15;
 
-                // Rating Scale Info
+                // Rating Scale Info & Table Headers (Identical)
                 doc.setFontSize(8);
                 doc.setTextColor(150, 150, 150);
                 doc.text('Rating Scale: 1=Poor | 2=Below Avg | 3=Average | 4=Good | 5=Excellent', margin, yPosition);
                 yPosition += 8;
 
-                // Table Headers
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont(undefined, 'bold');
@@ -1619,18 +1528,16 @@
                 doc.line(margin, yPosition, pageWidth - margin, yPosition);
                 yPosition += 6;
 
-                // Categories and Scores (data is already filtered by selection)
+                // Categories and Scores (Updated: Score should not be null)
                 doc.setFont(undefined, 'normal');
                 
                 Object.keys(data.itemsByCategory).forEach(category => {
-                    // Check page height before adding category header
                     if (yPosition > pageHeight - 30) {
                         doc.addPage();
                         yPosition = 20;
                     }
 
                     doc.setFontSize(11);
-                    // Using a darker cyan for PDF
                     doc.setTextColor(0, 139, 139); 
                     doc.setFont(undefined, 'bold');
                     doc.text(category, margin, yPosition);
@@ -1644,7 +1551,6 @@
                         const splitText = doc.splitTextToSize(entry.item, criteriaWidth - 5);
                         const requiredHeight = splitText.length * 5 + 3;
 
-                        // Check page height before adding item
                         if (yPosition + requiredHeight > pageHeight - 20) {
                             doc.addPage();
                             yPosition = 20;
@@ -1652,18 +1558,14 @@
 
                         doc.text(splitText, margin + 3, yPosition);
                         
-                        const scoreText = entry.score !== null ? String(entry.score) : 'Unscored';
-                        if (entry.score !== null) {
-                            doc.setTextColor(34, 139, 34); // Green for scores
-                            doc.setFont(undefined, 'bold');
-                        } else {
-                            doc.setTextColor(150, 150, 150); // Grey for unscored
-                            doc.setFont(undefined, 'italic');
-                        }
+                        // Score should not be null for selected items
+                        const scoreText = entry.score !== null ? String(entry.score) : 'Error';
                         
+                        doc.setTextColor(34, 139, 34); // Green (Using standard green for PDF scores)
+                        doc.setFont(undefined, 'bold');
+                       
                         doc.text(scoreText, scoreX, yPosition);
                         
-                        // Reset styles for next item text
                         doc.setTextColor(0, 0, 0);
                         doc.setFont(undefined, 'normal');
 
@@ -1672,16 +1574,14 @@
                     yPosition += 3;
                 });
 
-                 // Check page height before Narrative Comments
                  if (yPosition > pageHeight - 50) {
                     doc.addPage();
                     yPosition = 20;
                 }
 
-                // Narrative Comments
+                // Narrative Comments & Footer (Identical)
                 yPosition += 10;
                 doc.setFontSize(12);
-                // Using a darker yellow/gold for PDF
                 doc.setTextColor(218, 165, 32); 
                 doc.setFont(undefined, 'bold');
                 doc.text('Narrative Comments (First 24h Reactions)', margin, yPosition);
@@ -1694,7 +1594,6 @@
                 const comments = data.narrativeComments || 'No comments entered.';
                 const splitComments = doc.splitTextToSize(comments, contentWidth);
                 
-                // Handle long comments spanning multiple pages
                 for (const line of splitComments) {
                     if (yPosition > pageHeight - 20) {
                         doc.addPage();
@@ -1705,11 +1604,12 @@
                 }
 
                 addFooter();
-
-                const filename = `Evaluation_${data.programName.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                
+                const filenamePrefix = data.programName ? `Report_${data.programName.replace(/[^a-z0-9]/gi, '_')}_` : 'Report_';
+                const filename = `${filenamePrefix}${new Date().toISOString().split('T')[0]}.pdf`;
                 doc.save(filename);
 
-                showToast('✅ PDF downloaded successfully!');
+                showToast('✅ PDF Report downloaded successfully!');
                 
             } catch (error) {
                 console.error('PDF export error:', error);
@@ -1718,20 +1618,33 @@
                 const btn = document.getElementById('pdfBtn');
                 if (btn) {
                     btn.disabled = false;
-                    btn.textContent = '📑 Save as PDF';
+                    btn.textContent = '📑 Export (PDF)';
                 }
             }
         }
 
+
         function setDefaultDate() {
-            // Set default date to today for convenience, respecting user's timezone
+            // Set default date to today for convenience.
             const today = new Date();
             const offset = today.getTimezoneOffset();
-            const localDate = new Date(today.getTime() - (offset*60*1000));
-            const dateInput = document.getElementById('interviewDate');
-             // Check if the date input element supports the 'date' type and set the value
-            if (dateInput && dateInput.type === 'date') {
-                 dateInput.value = localDate.toISOString().split('T')[0];
+            
+            if (isNaN(offset)) {
+                 // Handle rare cases where timezone offset cannot be determined
+                 return;
+            }
+
+            try {
+                // Adjust for timezone offset to ensure the correct local date is displayed in the input field
+                const localDate = new Date(today.getTime() - (offset*60*1000));
+                const dateInput = document.getElementById('interviewDate');
+                
+                if (dateInput && dateInput.type === 'date') {
+                    // Format to YYYY-MM-DD
+                    dateInput.value = localDate.toISOString().split('T')[0];
+                }
+            } catch (e) {
+                console.error("Error setting default date:", e);
             }
         }
 
