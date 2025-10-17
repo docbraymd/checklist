@@ -492,7 +492,7 @@
         <div class="info-box">
             <h3>📝 How to Use This Tool</h3>
              <p><strong>1. Select Criteria:</strong> Check the boxes for criteria important to YOU. Selected items default to 3 (Average).</p>
-            <p><strong>2. Rate Program 1:</strong> Adjust the slider (or use the number input on desktop) to rate the program.</p>
+            <p><strong>2. Rate Program:</strong> Adjust the slider (or use the number input on desktop) to rate the program.</p>
              <p><strong>3. Export & Compare:</strong> Export to Excel/CSV to generate a comparison matrix for up to 15 programs.</p>
             <div class="rating-guide">
                 <span class="rg-1">1 = Poor</span>
@@ -1559,14 +1559,14 @@
                 doc.text(`Total Points: ${data.totalScore} / ${data.maxPossibleScore} (Max Possible)`, margin + 5, yPosition);
                 
                 yPosition += 7;
-                doc.text(`Total Points: ${data.totalScore} / ${data.maxPossibleScore} (Max Possible)`, margin + 5, yPosition);
-                
-                yPosition += 7;
                 doc.text(`Criteria Selected: ${data.selectedCount}`, margin + 5, yPosition);
 
                 yPosition += 15;
 
-                // Rating Scale Info & Table Headers (Identical)
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text('Rating Scale: 1=Poor | 2=Below Avg | 3=Average | 4=Good | 5=Excellent', margin, yPosition);
+                yPosition += 8;
 
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
@@ -1700,5 +1700,4 @@
     </script>
 </body>
 </html>
-
 
