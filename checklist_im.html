@@ -468,7 +468,7 @@
     <div class="sticky-score-header">
         <div class="score-display">
             Score Ratio: <span class="score-value" id="scoreRatio">0.00</span>
-            <span class="score-details">(<span id="totalScore">0</span> pts / <span id="maxPossibleScore">0</span> max pts) • (<span id="scoredCount">0</span> rated / <span id="selectedCount">0</span> selected)</span>
+            <span class="score-details">(<span id="totalScore">0</span> pts / <span id="maxPossibleScore">0</span> max pts)</span>
         </div>
     </div>
 
@@ -480,11 +480,11 @@
 
         <div class="program-details">
             <div class="input-group">
-                <label for="programName">Program Name (Program 1)</label>
+                <label for="programName">Program Name</label>
                 <input type="text" id="programName" placeholder="e.g., University Hospital IM">
             </div>
             <div class="input-group">
-                <label for="interviewDate">Interview Date (Program 1)</label>
+                <label for="interviewDate">Interview Date</label>
                 <input type="date" id="interviewDate">
             </div>
         </div>
@@ -492,7 +492,7 @@
         <div class="info-box">
             <h3>📝 How to Use This Tool</h3>
              <p><strong>1. Select Criteria:</strong> Check the boxes for criteria important to YOU. Selected items default to 3 (Average).</p>
-            <p><strong>2. Rate Program 1:</strong> Adjust the slider (or use the number input on desktop) to rate the program.</p>
+            <p><strong>2. Rate Program:</strong> Adjust the slider (or use the number input on desktop) to rate the program.</p>
              <p><strong>3. Export & Compare:</strong> Export to Excel/CSV to generate a comparison matrix for up to 15 programs.</p>
             <div class="rating-guide">
                 <span class="rg-1">1 = Poor</span>
@@ -516,7 +516,7 @@
         </div>
 
         <div class="narrative-section">
-            <h3>💬 Narrative Comments (Program 1)</h3>
+            <h3>💬 Narrative Comments</h3>
             <p>Record your first memories, gut reactions, and key takeaways from the interview day (within the first 24 hours).</p>
             <textarea id="narrativeComments" placeholder="Enter your immediate thoughts and feelings here..."></textarea>
         </div>
@@ -1118,8 +1118,6 @@
             document.getElementById('scoreRatio').textContent = scoreRatio.toFixed(2);
             document.getElementById('totalScore').textContent = totalScoreAccumulated;
             document.getElementById('maxPossibleScore').textContent = maxPossibleScore;
-            document.getElementById('scoredCount').textContent = scoredCount;
-            document.getElementById('selectedCount').textContent = selectedCount;
         }
         
         // (resetForm remains the same)
@@ -1146,8 +1144,6 @@
             const scoreRatio = document.getElementById('scoreRatio').textContent;
             const totalScore = document.getElementById('totalScore').textContent;
             const maxPossibleScore = document.getElementById('maxPossibleScore').textContent;
-            const scoredCount = document.getElementById('scoredCount').textContent;
-            const selectedCount = document.getElementById('selectedCount').textContent;
             
             const itemsByCategory = {};
 
@@ -1170,7 +1166,7 @@
             });
 
             return {
-                programName, interviewDate, narrativeComments, scoreRatio, totalScore, maxPossibleScore, scoredCount, selectedCount, totalCount: totalItemsCount, itemsByCategory
+                programName, interviewDate, narrativeComments, scoreRatio, totalScore, maxPossibleScore, totalCount: totalItemsCount, itemsByCategory
             };
         }
         
@@ -1201,7 +1197,7 @@
 
                 // --- Header Rows (Identical) ---
                 const nameRow = ['Category', 'Criteria'];
-                nameRow.push(data.programName || '[Enter Program 1 Name]');
+                nameRow.push(data.programName || '[Enter Program Name]');
                 for (let i = 2; i <= MAX_PROGRAMS; i++) { nameRow.push(`[Enter Program ${i} Name]`); }
                 wsData.push(nameRow);
 
@@ -1332,7 +1328,7 @@
 
                 // --- Header Rows ---
                 const nameRow = ['Category', 'Criteria'];
-                nameRow.push(data.programName || '[Enter Program 1 Name]');
+                nameRow.push(data.programName || '[Enter Program Name]');
                 for (let i = 2; i <= MAX_PROGRAMS; i++) { nameRow.push(`[Enter Program ${i} Name]`); }
                 csvContent += createCSVRow(nameRow);
 
@@ -1483,7 +1479,7 @@
                 doc.text(`Interview Date: ${displayDate} | Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPosition, { align: 'center' });
                 yPosition += 15;
 
-                // Summary Box (Identical)
+                // Summary Box
                 const summaryBoxHeight = 30;
                 doc.setFillColor(240, 248, 255);
                 doc.rect(margin, yPosition, contentWidth, summaryBoxHeight, 'F');
@@ -1508,7 +1504,9 @@
                 doc.text(`Total Points: ${data.totalScore} / ${data.maxPossibleScore} (Max Possible)`, margin + 5, yPosition);
                 
                 yPosition += 7;
-                doc.text(`Criteria Rated: ${data.scoredCount} / ${data.selectedCount} (Selected)`, margin + 5, yPosition);
+                const selectedCount = selectedItems.size;
+                doc.text(`Criteria Selected: ${selectedCount}`, margin + 5, yPosition);
+
 
                 yPosition += 15;
 
