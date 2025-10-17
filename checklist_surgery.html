@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Surgery Residency Program Evaluation & Selection 2025-2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        /* --- Base Styles & Theme --- */
+        :root {
+            --bg-main: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-container: #0f0f1e;
+            --bg-element: #252535;
+            --bg-element-hover: #2a2a40;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-blue: #00d9ff;
+            --accent-yellow: #ffd93b;
+            --accent-green: #00ff88;
+            --border-color: #2a5298;
+            --border-ui: #2a2a3e;
+            /* Rating Colors */
+            --rating-1: #ff4d4d; /* Red */
+            --rating-2: #ff8c00; /* Orange */
+            --rating-3: #ffcc00; /* Yellow */
+            --rating-4: #9acd32; /* YellowGreen */
+            --rating-5: #4caf50; /* Green */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            /* Padding top to ensure content doesn't hide behind the fixed score header */
+            padding-top: 80px; 
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: var(--bg-container);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        /* --- Header --- */
+        .header {
+            background: linear-gradient(135deg, #1e3a5f 0%, var(--border-color) 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-blue);
+        }
+
+        .header h1 {
+            color: var(--accent-blue);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        /* --- Program Details Input --- */
+        .program-details {
+            background: var(--bg-main);
+            padding: 20px 30px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 2px solid var(--border-ui);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .input-group input {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-container);
+            color: var(--text-primary);
+            font-size: 1em;
+            min-width: 250px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+        }
+
+        /* --- Info Box & Rating Guide --- */
+        .info-box {
+            background: var(--bg-element);
+            padding: 20px;
+            margin: 20px 30px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-yellow);
+        }
+
+        .info-box h3 {
+            color: var(--accent-yellow);
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+
+        .rating-guide {
+            display: inline-flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .rating-guide span {
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #fff;
+            font-weight: bold;
+        }
+        .rg-1 { background: var(--rating-1); }
+        .rg-2 { background: var(--rating-2); }
+        .rg-3 { background: var(--rating-3); color: #333; }
+        .rg-4 { background: var(--rating-4); }
+        .rg-5 { background: var(--rating-5); }
+
+
+        /* --- Controls & Buttons --- */
+        .controls {
+            background: var(--bg-main);
+            padding: 20px 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .controls.top-controls {
+            border-bottom: 2px solid var(--border-ui);
+        }
+
+        .controls.bottom-controls {
+            border-top: 2px solid var(--border-ui);
+        }
+
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Button Gradients */
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; }
+        .btn-primary:hover:not(:disabled) { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5); }
+        .btn-primary.top-ten { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .btn-primary.top-ten:hover:not(:disabled) { background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%); box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5); }
+        .btn-success { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: #ffffff; }
+        .btn-success:hover:not(:disabled) { background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 239, 125, 0.5); }
+        .btn-warning { background: linear-gradient(135deg, #fc6c8f 0%, #ffb88c 100%); color: #ffffff; }
+        .btn-warning:hover:not(:disabled) { background: linear-gradient(135deg, #ffb88c 0%, #fc6c8f 100%); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(252, 108, 143, 0.5); }
+        .btn-success.excel { background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%); }
+        .btn-success.excel:hover:not(:disabled) { background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5); }
+        .btn-success.csv { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .btn-success.csv:hover:not(:disabled) { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); box-shadow: 0 8px 25px rgba(79, 172, 254, 0.5); }
+        .btn-warning.pdf { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .btn-warning.pdf:hover:not(:disabled) { background: linear-gradient(135deg, #fee140 0%, #fa709a 100%); box-shadow: 0 8px 25px rgba(254, 225, 64, 0.5); }
+        .btn-danger { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); color: #ffffff; }
+        .btn-danger:hover:not(:disabled) { background: linear-gradient(135deg, #f45c43 0%, #eb3349 100%); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(235, 51, 73, 0.5); }
+
+        /* --- Content & Categories --- */
+        .content { padding: 30px; }
+        .category { margin-bottom: 30px; background: var(--bg-main); border-radius: 10px; padding: 20px; border-left: 4px solid var(--accent-blue); transition: all 0.3s ease; }
+        .category:hover { background: #1e1e2e; box-shadow: 0 5px 20px rgba(0, 217, 255, 0.1); }
+        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; padding: 10px; border-radius: 8px; transition: background 0.3s ease; }
+        .category-header:hover { background: var(--bg-element); }
+        .category-title { font-size: 1.4em; font-weight: 700; color: var(--accent-blue); text-shadow: 0 0 10px rgba(0, 217, 255, 0.3); }
+        .category-count { background: var(--accent-blue); color: var(--bg-container); padding: 4px 12px; border-radius: 20px; font-size: 0.9em; font-weight: 600; }
+        .category-items { display: block; }
+        .category-items.collapsed { display: none; }
+        .toggle-icon { font-size: 1.2em; transition: transform 0.3s ease; }
+        .toggle-icon.collapsed { transform: rotate(-90deg); }
+
+        /* --- Checklist Item, Selection & Rating Controls (Updated for Responsiveness) --- */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--bg-element);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            background: var(--bg-element-hover);
+        }
+
+        /* Container for checkbox and label */
+        .item-selection-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        /* Selection Checkbox */
+        .checklist-item input[type="checkbox"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent-blue);
+            flex-shrink: 0;
+        }
+
+        .item-label {
+            flex: 1;
+            color: #d0d0d0;
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+
+        /* Visual feedback for selected items */
+        .checklist-item.selected {
+            background: #2a3a4a;
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .checklist-item.selected .item-label {
+             color: var(--accent-green);
+             font-weight: 500;
+        }
+
+        /* Rating Controls */
+        .rating-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        /* Style for disabled rating container (when checkbox is unchecked) */
+        .rating-container.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .slider-container {
+            width: 150px; /* Increased width slightly for better desktop usability */
+            transition: opacity 0.3s ease;
+        }
+
+        /* The slider is now always visible if enabled (no longer hidden by 'unscored' class) */
+
+        .rating-slider {
+            width: 100%;
+            cursor: pointer;
+            /* Accent color is dynamically controlled by JavaScript */
+        }
+
+        .rating-input {
+            width: 60px;
+            padding: 8px;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-container);
+            color: var(--text-primary);
+            font-size: 1em;
+            cursor: text; /* Cursor is always text now as activation is handled by checkbox */
+        }
+
+        /* Style for unscored input (applies when deselected) */
+        .rating-container.unscored .rating-input {
+            color: #7a7a8e;
+            font-style: italic;
+            border-color: var(--border-color);
+        }
+        
+        /* Style for scored input */
+        .rating-container:not(.unscored) .rating-input {
+            color: var(--accent-green);
+            font-weight: bold;
+            border-color: var(--accent-green);
+        }
+
+        .rating-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 5px rgba(0, 217, 255, 0.5);
+        }
+
+        /* --- Responsive Design Adjustments (Mobile Layout) --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                padding-top: 80px;
+            }
+            .container {
+                border-radius: 0;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content, .info-box, .narrative-section {
+                margin-left: 15px;
+                margin-right: 15px;
+                padding: 15px;
+            }
+            
+            .controls, .program-details {
+                 padding: 15px;
+            }
+
+            /* Hide the number input box on small screens */
+            .rating-input {
+                display: none;
+            }
+
+            /* Adjust layout for checklist items */
+            .checklist-item {
+                /* Change from flex-row (default) to column layout */
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px 10px;
+            }
+
+            .item-selection-container {
+                width: 100%; /* Ensure the label/checkbox take full width */
+            }
+
+            .item-label {
+                padding-right: 0;
+            }
+
+            /* Move the rating container below the label */
+            .rating-container {
+                width: 100%;
+                margin-top: 12px;
+                padding-left: 35px; /* Indent slightly to align with text */
+            }
+
+            .slider-container {
+                width: 100%; /* Make the slider take the available width */
+            }
+        }
+
+
+        /* --- Filtering --- */
+        .filter-active .checklist-item:not(.selected) { display: none; }
+        .filter-active .category:not(.has-selected) { display: none; }
+
+        /* --- Sticky Score Display --- */
+        .sticky-score-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-main);
+            padding: 15px 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        .score-display {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+        }
+
+        .score-value {
+            color: var(--accent-green);
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-left: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .score-details {
+            font-size: 0.8em;
+            color: #9a9aae;
+            margin-left: 15px;
+        }
+
+        @media (max-width: 768px) {
+             .sticky-score-header {
+                padding: 10px 15px;
+            }
+            .score-display {
+                font-size: 1em;
+                text-align: center;
+            }
+             .score-details {
+                display: block;
+                margin-left: 0;
+                margin-top: 5px;
+                text-align: center;
+            }
+        }
+
+        /* --- Narrative Comments & Footer --- */
+        .narrative-section { padding: 30px; background: var(--bg-main); margin: 0 30px 30px 30px; border-radius: 10px; border-left: 4px solid var(--accent-yellow); }
+        .narrative-section h3 { color: var(--accent-yellow); margin-bottom: 10px; }
+        .narrative-section p { color: var(--text-secondary); font-size: 0.9em; margin-bottom: 15px; }
+        #narrativeComments { width: 100%; min-height: 150px; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-container); color: var(--text-primary); font-size: 1em; resize: vertical; }
+        #narrativeComments:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(0, 217, 255, 0.3); }
+        .footer { text-align: center; padding: 20px; background: var(--bg-container); color: #7a7a8e; font-size: 0.9em; border-top: 1px solid var(--border-ui); }
+
+        /* --- Utilities & Misc --- */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00fff2; }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%); color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); transform: translateY(150%); transition: transform 0.3s ease; z-index: 1000; font-weight: 600; }
+        .toast.show { transform: translateY(0); }
+        .toast.error { background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%); }
+    </style>
+</head>
+<body>
+    <div class="sticky-score-header">
+        <div class="score-display">
+            Score Ratio: <span class="score-value" id="scoreRatio">0.00</span>
+            <span class="score-details">(<span id="totalScore">0</span> pts / <span id="maxPossibleScore">0</span> max pts from <span id="selectedCount">0</span> selected criteria)</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🔪 General Surgery Residency Program Evaluation</h1>
+            <p>2025-2026 Application Cycle • Criteria Selection & Post-Interview Assessment</p>
+        </div>
+
+        <div class="program-details">
+            <div class="input-group">
+                <label for="programName">Program Name</label>
+                <input type="text" id="programName" placeholder="e.g., University Hospital Gen Surg">
+            </div>
+            <div class="input-group">
+                <label for="interviewDate">Interview Date</label>
+                <input type="date" id="interviewDate">
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>📝 How to Use This Tool</h3>
+             <p><strong>1. Select Criteria:</strong> Check the boxes for criteria important to YOU. Selected items default to 3 (Average).</p>
+            <p><strong>2. Rate Program 1:</strong> Adjust the slider (or use the number input on desktop) to rate the program.</p>
+             <p><strong>3. Export & Compare:</strong> Export to Excel/CSV to generate a comparison matrix for up to 15 programs.</p>
+            <div class="rating-guide">
+                <span class="rg-1">1 = Poor</span>
+                <span class="rg-2">2 = Below Avg</span>
+                <span class="rg-3">3 = Average</span>
+                <span class="rg-4">4 = Good</span>
+                <span class="rg-5">5 = Excellent</span>
+            </div>
+        </div>
+
+        <div class="controls top-controls">
+            <button class="btn btn-primary" onclick="selectTop25()">⭐ Top 25</button>
+            <button class="btn btn-primary top-ten" onclick="selectTopTen()">⚡ Top 10</button>
+            <button class="btn btn-success" onclick="selectAll()">✓ Select All</button>
+            <button class="btn btn-danger" onclick="deselectAll()">✗ Deselect All</button>
+            <button class="btn btn-warning" onclick="toggleFilter()" id="filterBtn">👁️ Hide Unselected</button>
+        </div>
+
+        <div class="content">
+            <div id="checklistPanel"></div>
+        </div>
+
+        <div class="narrative-section">
+            <h3>💬 Narrative Comments</h3>
+            <p>Record your first memories, gut reactions, and key takeaways from the interview day (within the first 24 hours).</p>
+            <textarea id="narrativeComments" placeholder="Enter your immediate thoughts and feelings here..."></textarea>
+        </div>
+
+        <div class="controls bottom-controls">
+            <button class="btn btn-success excel" onclick="exportToExcel()" id="excelBtn">📊 Export (Excel)</button>
+            <button class="btn btn-success csv" onclick="exportToCSV()" id="csvBtn">📄 Export (CSV)</button>
+            <button class="btn btn-warning pdf" onclick="exportToPDF()" id="pdfBtn">📑 Export (PDF)</button>
+            <button class="btn btn-danger" onclick="resetForm()">🔄 Reset Form</button>
+        </div>
+
+        <div class="footer">
+            © 2025 DocBray Foundation. All rights reserved.
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Complete dataset of criteria
+        const checklistData = {
+            "Operative Experience & Case Volume": [
+                "Program consistently exceeds ACGME minimum of 850 total major cases (1000+ cases preferred)",
+                "Chief residents reliably achieve >200 cases in chief year",
+                "Residents achieve ≥250 cases by start of PGY-3",
+                "Program meets all ACGME defined category minimums (alimentary, breast, endocrine, vascular, etc.)",
+                "≥10 operative trauma cases per resident",
+                "≥35 upper endoscopies and ≥50 colonoscopies",
+                "≥100 basic laparoscopic cases and ≥75 advanced laparoscopic cases",
+                "Program actively monitors individual case logs and intervenes if residents fall behind",
+                "Early operative exposure - interns actively participate in OR from Year 1",
+                "Diverse surgical pathology including routine and complex cases",
+                "Exposure to high-complexity surgeries (multidisciplinary cancer, transplant, complex vascular)",
+                "Balanced mix of elective and emergency cases",
+                "Adequate representation across open, laparoscopic, and robotic approaches",
+                "Fellowship presence enhances rather than competes with resident operative opportunities",
+                "Residents log cases as primary surgeon (not just assist) with increasing frequency",
+                "Clear credit role system that accurately reflects resident contribution"
+            ],
+            "Operative Autonomy & Graduated Responsibility": [
+                "Clear progression of autonomy from PGY-1 to PGY-5",
+                "Chief residents function as primary surgeon on complex cases with attending oversight",
+                "Residents make intraoperative decisions appropriate to their level",
+                "Attendings provide appropriate supervision without micromanaging senior residents",
+                "Teaching Assistant opportunities - chiefs complete ≥25 TA cases",
+                "Dedicated chief resident service or transition-to-practice rotation",
+                "Chiefs run their own operative list with independent decision-making and backup",
+                "Formal assessment of readiness for independent practice before graduation",
+                "Active implementation of Entrustable Professional Activities (EPAs)",
+                "Residents receive frequent feedback on progression toward autonomy",
+                "Certification of independent capability in core procedures (FLS, robotic certification)",
+                "Graduates report feeling confident performing common procedures independently",
+                "Alumni do not require excessive additional proctoring in their first attending positions"
+            ],
+            "Education & Curriculum": [
+                "Well-organized curriculum aligned with SCORE curriculum standards",
+                "Weekly protected didactic time (grand rounds, M&M, journal club, lectures)",
+                "Residents relieved of clinical duties during protected teaching time",
+                "Regular non-punitive M&M conference focused on learning and systems improvement",
+                "Variety of educational forums (basic science, clinical reviews, tumor boards, multidisciplinary conferences)",
+                "Mock oral examinations and case presentations for board preparation",
+                "High resident satisfaction with quality of teaching (>80%)",
+                "Active faculty engagement in didactics (not just resident-run)",
+                "Innovative teaching methods (simulation, flipped classroom, asynchronous modules)",
+                "Curriculum adapts based on ABSITE results and resident feedback",
+                "ACGME Milestone-based evaluation with semi-annual CCC meetings",
+                "Implementation of 18 core EPAs for resident assessment",
+                "Continuity of care model in surgical clinics",
+                "Point-of-care ultrasound (POCUS) and procedural training integrated",
+                "Palliative care and end-of-life decision-making curriculum",
+                "Health care disparities and ethical principles education",
+                "Integration of telemedicine and minimally invasive techniques",
+                "Library and online surgical curriculum access (e.g., ACS resources)",
+                "Annual case log reviews for breadth and complexity assessment",
+                "No ACGME citations for curriculum deficiencies"
+            ],
+            "Surgical Skills Training & Simulation": [
+                "On-site surgical simulation center with comprehensive equipment",
+                "FLS (Fundamentals of Laparoscopic Surgery) trainers and certification pathway",
+                "Robotic surgery simulators (da Vinci console or equivalent)",
+                "Endoscopy simulation models for EGD and colonoscopy practice",
+                "Dedicated cadaver lab or wet lab for trauma and complex procedures",
+                "Scheduled skills labs and boot camps (not just ad hoc access)",
+                "Open lab hours for resident practice with accessible equipment",
+                "ATLS labs, trauma simulations, and ACLS/ATLS certification for all residents",
+                "Crisis management and team-based scenarios (e.g., open aortic aneurysm, airway emergencies)",
+                "Formal technical skills assessment using OSATS or similar tools",
+                "Faculty coaching and feedback on simulation performance",
+                "Integration of simulation into rotation curriculum (not optional)",
+                "Procedure-specific training (endoscopy, laparoscopy, open techniques, anastomosis models)",
+                "Remediation pathways for skill deficiencies identified in simulation",
+                "Milestone tracking of technical skill progression through simulation",
+                "Program involvement in surgical education research or simulation innovation"
+            ],
+            "Faculty Engagement & Mentorship Quality": [
+                "Adequate faculty-to-resident ratio (>1 core faculty per resident on most rotations)",
+                "Board-certified faculty with diverse subspecialty expertise",
+                "Faculty with teaching awards or formal education training",
+                "Accessible and approachable faculty with open-door policy",
+                "No reports of abusive or disrespectful faculty behavior",
+                "Faculty provide timely, constructive, specific feedback after cases",
+                "Active faculty scholarship (research, publications, presentations)",
+                "Faculty stability with low turnover and long-tenured members",
+                "High resident ratings of faculty teaching and professionalism",
+                "Diverse faculty role models (gender, race, background, subspecialty)",
+                "At least one core faculty member per chief resident for adequate supervision",
+                "Structured mentorship program with assigned faculty mentors",
+                "Regular mentor-mentee meetings (quarterly minimum)",
+                "Career guidance for both fellowship and practice pathways",
+                "Subspecialty-specific mentorship matching available",
+                "Chief resident mentorship and supervisory roles formally recognized",
+                "Faculty demonstration of professionalism and patient-centered care",
+                "Faculty pursue continuing education in teaching methods and well-being"
+            ],
+            "Subspecialty Rotations & Breadth of Training": [
+                "Dedicated vascular surgery rotation with ≥50 vascular cases",
+                "Cardiothoracic experience with ≥20 thoracic cases (5 open thoracotomies)",
+                "Pediatric surgery rotation at children's hospital with ≥20 pediatric cases",
+                "Surgical oncology exposure with complex cancer resections and tumor boards",
+                "Robust colorectal surgery experience with IBD and cancer management",
+                "Endocrine surgery cases (≥15 thyroid/parathyroid/adrenal procedures)",
+                "Transplant surgery exposure (if available) or hepatobiliary experience",
+                "Breast surgery clinic and operative experience",
+                "Balance of operative vs. non-operative experiences across specialties",
+                "Creative solutions for gaps (external rotations, affiliations) if subspecialty not in-house",
+                "Appropriate rotation timing (junior exposure + senior operative time)",
+                "Rotation length adequate for meaningful learning (not token 1-2 weeks)",
+                "Subspecialty fellows do not monopolize resident operative opportunities",
+                "Elective time available for additional subspecialty experience if interested",
+                "Residents meet ACGME index case requirements across all subspecialty categories"
+            ],
+            "Trauma & Acute Care Surgery Experience": [
+                "Rotation at Level I trauma center (or robust Level II)",
+                "≥10 operative trauma cases per resident (program exceeds this preferred)",
+                "≥10 trauma resuscitations as team leader by graduation",
+                "Exposure to both penetrating and blunt trauma mechanisms",
+                "Residents lead trauma bay as seniors under supervision",
+                "Trauma fellows enhance education without monopolizing operative cases",
+                "ATLS certification provided early in training",
+                "Experience with both operative and non-operative trauma management",
+                "Busy acute care surgery service for emergent general surgery cases",
+                "Residents manage emergency cases (perforations, sepsis, obstructions) with autonomy",
+                "Integration of trauma patients into SICU rotations for continuity",
+                "Participation in trauma M&M and performance improvement meetings"
+            ],
+            "Critical Care & Perioperative Management": [
+                "Multiple ICU rotations (≥2-3 months total during residency)",
+                "Management of ≥40 critical care cases covering ICU scenarios",
+                "Active resident role in ICU (writing orders, rounding, decision-making)",
+                "Critical care didactics and FCCS (Fundamental Critical Care Support) course",
+                "Exposure to various ICU settings (SICU, Trauma ICU, Cardiothoracic ICU, Burn ICU)",
+                "Residents comfortable handling ICU emergencies independently by graduation",
+                "Interdisciplinary collaboration with ICU teams (pharmacy, respiratory, other services)",
+                "Strong emphasis on perioperative management (fluids, nutrition, pain, complications)",
+                "Teaching on Enhanced Recovery After Surgery (ERAS) protocols",
+                "Competence in ICU procedures (central lines, arterial lines, chest tubes, bronchoscopy)",
+                "On-call ICU experience with progressive overnight management responsibility"
+            ],
+            "Minimally Invasive & Robotic Surgery Training": [
+                "Extensive laparoscopic volume (basic and advanced cases)",
+                "Formal FLS certification required or strongly encouraged",
+                "Faculty expertise in minimally invasive/bariatric surgery",
+                "Balanced exposure to open and laparoscopic techniques",
+                "Advanced laparoscopic cases (colectomies, foregut surgery, hernia repairs)",
+                "Residents feel confident performing basic MIS procedures independently by graduation",
+                "Robotic surgery curriculum with console time for residents",
+                "Pathway to robotic surgery certificate by graduation",
+                "Exposure to newer technologies (single-incision, endoluminal procedures)",
+                "Not overly focused on one modality to exclusion of others",
+                "Residents operate robotically, not just observe or assist"
+            ],
+            "Outpatient & Continuity Clinic Experience": [
+                "Resident continuity clinic (weekly or biweekly) with own patient panel",
+                "Longitudinal follow-up of patients pre- and post-operatively",
+                "Preoperative evaluation skills (workup, risk stratification, informed consent)",
+                "Postoperative care (wound management, pathology discussion, surveillance)",
+                "Outpatient procedures integrated (I&D, excisions, sigmoidoscopies)",
+                "Multidisciplinary clinic exposure (breast clinic, endocrine, tumor boards)",
+                "ACGME compliance - clinic occurs regularly and residents evaluated",
+                "Clinic time protected (not routinely pulled for OR or other duties)",
+                "Diverse outpatient case mix reflecting general surgery breadth",
+                "Telemedicine integration for surgical follow-up when appropriate"
+            ],
+            "Board Exam Preparation & Outcomes": [
+                "High first-time pass rates for ABS qualifying (written) exam (>90% ideal)",
+                "High first-time pass rates for ABS certifying (oral) exam (>90% ideal)",
+                "Essentially 100% of graduates eventually achieve ABS certification",
+                "No ACGME citations or warnings related to board pass rates",
+                "Pass rates at or above national average",
+                "Track record of continuous improvement if past performance was suboptimal",
+                "Strong ABSITE performance (at or above national mean)",
+                "Individual ABSITE feedback and remediation for low performers",
+                "Structured board review in senior year (courses, question banks, mock orals)",
+                "Program provides review materials and resources (books, subscriptions)",
+                "Curriculum aligned with board exam content (SCORE objectives)",
+                "Program adjusts teaching based on ABSITE and board exam results annually"
+            ],
+            "Research & Scholarly Activity Opportunities": [
+                "Residents required to complete scholarly project by graduation",
+                "Research mentors, statisticians, and methodology support available",
+                "Dedicated research time or electives (1-3 months or research year option)",
+                "Active faculty research creating opportunities for resident involvement",
+                "Research funding or grants available for resident projects",
+                "NIH funding or major clinical research projects at institution",
+                "Quality improvement (QI) projects integrated into training",
+                "Protected research track available for academically-minded residents",
+                "Residents regularly present at regional/national conferences",
+                "Most chiefs have at least one publication or presentation by graduation",
+                "Conference funding provided for presentations",
+                "Resident research symposium or forum to showcase work",
+                "Strong mentorship in research methods, IRB navigation, and publication process"
+            ],
+            "Career Mentorship & Fellowship Placement": [
+                "High fellowship match rate for interested residents",
+                "Competitive placements in desirable fellowships (pediatric, oncology, vascular, etc.)",
+                "Strong recommendation letters and faculty network support",
+                "Advising on fellowship selection and application process",
+                "Mock interviews and ERAS support",
+                "Early subspecialty mentorship from PGY-1 for those with specific interests",
+                "Subspecialty elective availability and away rotation support",
+                "Support for residents pursuing general surgery practice (job search, contract review)",
+                "Teaching on practice management, billing, and business aspects",
+                "CV building and interview training",
+                "Alumni network for career connections and advice",
+                "Diverse alumni career paths (academic, private practice, leadership roles)"
+            ],
+            "Duty Hours, Workload & Resident Well-Being": [
+                "Consistent adherence to 80-hour weekly limit (averaged over 4 weeks)",
+                "Residents not pressured to misreport duty hours",
+                "One day off in seven on average",
+                "24+4 hour maximum shift length respected",
+                "Reasonable call schedule (night float, home call, or hybrid system)",
+                "No recent ACGME citations for duty hour violations",
+                "Post-call policies allow adequate recovery time",
+                "Fatigue mitigation processes (safe transport, backup call if exhausted)",
+                "Dedicated wellness initiatives (retreats, wellness committee, counseling access)",
+                "24/7 confidential mental health services available",
+                "High resident morale - residents appear happy and energetic",
+                "Wellness curriculum and regular burnout assessments with action plans",
+                "Protected wellness days or activities",
+                "Supportive culture - residents can request backup without stigma",
+                "Adequate ancillary support (phlebotomy, transport) minimizing scut work",
+                "Work-life balance supported (vacation respected, parental leave ≥6 weeks)"
+            ],
+            "Benefits & Compensation": [
+                "Competitive salary for PGY-1 through PGY-5 (at or above regional average)",
+                "Comprehensive health insurance (medical, dental, vision)",
+                "Professional dues, malpractice insurance, and meal stipends covered",
+                "≥6 weeks parental leave (birth/adoption) with program support",
+                "Adequate vacation time (3-4 weeks annually) that residents can actually take",
+                "Conference/educational stipend for ABSITE prep and board materials",
+                "Moonlighting permitted (internal/external) with appropriate year restrictions",
+                "Meal allowances or free meals when on call",
+                "Parking provided or subsidized",
+                "Housing stipend or affordable housing options nearby",
+                "Gym membership or fitness benefits",
+                "Childcare support (on-site facility or subsidies)",
+                "Lactation facilities for nursing parents",
+                "Leave of absence support for personal/family needs",
+                "Policies ensuring coverage without retaliation when residents take benefits"
+            ],
+            "Hospital & Facilities": [
+                "High-volume tertiary care center or strong community hospital with appropriate acuity",
+                "Quality OR staff (nursing, anesthesia, techs) supporting surgical education",
+                "Advanced surgical technology available (robotic, laparoscopic equipment)",
+                "EMR system that is user-friendly and consistent across sites",
+                "Diverse patient population (socioeconomic, ethnic, pathologic)",
+                "Reasonable number of rotation sites (≤3 major sites, manageable commute)",
+                "Consultative services available (cardiology, nephrology, etc.) for complex patients",
+                "No excessive competition from other residencies for cases",
+                "Primary training site has strong reputation and case volume",
+                "Adequate call rooms (private, clean, comfortable)",
+                "Resident lounge and workspace with computers and amenities",
+                "Hospital cafeteria with reasonable hours and quality",
+                "On-site gym or fitness facility",
+                "Telemedicine capabilities for follow-up and education"
+            ],
+            "Program Culture, Support & Professionalism": [
+                "Cooperative, supportive resident cohort (not cutthroat competition)",
+                "Respectful learning environment - no tolerance for harassment or abuse",
+                "Psychological safety - residents comfortable asking questions",
+                "Responsive program leadership that addresses resident concerns",
+                "Transparent communication from administration",
+                "Residents socialize and support each other outside work",
+                "Positive reinforcement and recognition of resident achievements",
+                "High overall resident satisfaction (>80% would choose program again)",
+                "No reports of malignant culture on interviews or online forums",
+                "Frequent constructive feedback (rotation evals, milestone meetings)",
+                "360-degree evaluations including peer and nursing input",
+                "Clear remediation pathways with support (not just punitive)",
+                "Program uses resident feedback to make improvements (Annual Program Evaluation)",
+                "Residents feel evaluations are fair and not retaliatory"
+            ],
+            "Diversity, Equity & Inclusion": [
+                "Diverse resident class (gender, race/ethnicity, background)",
+                "Women and underrepresented minorities in faculty leadership",
+                "Inclusive culture - no tolerance for discriminatory remarks",
+                "Unconscious bias training for faculty and residents",
+                "LGBTQ+ friendly environment with supportive policies",
+                "Support networks/affinity groups (Women in Surgery, URM groups)",
+                "IMG residents integrated and supported equally",
+                "Active DEI committee with resident participation",
+                "DEI didactic sessions and health equity curriculum",
+                "Swift, fair response to discrimination incidents if they occur",
+                "Holistic review in recruitment with emphasis on diverse candidate pipeline"
+            ],
+            "Resident Retention & Attrition": [
+                "Attrition primarily for neutral reasons (family relocation, specialty change) not burnout",
+                "Strong class cohesion - categorical interns finish together as chiefs",
+                "Robust support for struggling residents (academic, personal) before attrition",
+                "Minimal transfers out; occasional transfers in (indicates program desirability)",
+                "Alumni would choose the program again if making the decision now"
+            ],
+            "Accreditation Status & Program Stability": [
+                "\"Continued Accreditation\" status without warnings or probation",
+                "No major citations in recent ACGME site visits",
+                "Program addresses any cited deficiencies promptly and effectively",
+                "Resident complement stable or growing (not losing positions)",
+                "ABS case log reports show all residents consistently meet minimums",
+                "Stable program director (>3 years tenure, track record of advocacy)",
+                "Strong institutional support (funding, facilities, faculty recruitment)",
+                "No recent loss of clinical sites or services that would jeopardize training"
+            ],
+            "Interview Day & Overall Impressions": [
+                "Well-organized, professional interview day",
+                "Program leadership responsive to questions and concerns",
+                "Opportunity to interact with residents at multiple PGY levels",
+                "Residents appear happy, energetic, and speak honestly about program",
+                "Strong camaraderie and support visible among residents",
+                "Facilities tour shows adequate infrastructure and resources",
+                "Clear presentation of program structure, curriculum, and expectations",
+                "Transparent about challenges and how program addresses them",
+                "Overall positive gut feeling about program culture and fit",
+                "Sense of welcome and value as a potential trainee",
+                "Alignment with personal values and learning style",
+                "Can envision thriving and being happy here for 5 years"
+            ]
+        };
+
+        // Global state management
+        let scores = {}; // Stores scores. Key format: "Category|||Item"
+        let selectedItems = new Set(); // Stores keys of selected items
+        let filterActive = false; // Tracks if "Hide Unselected" is active
+        let totalItemsCount = 0; // Global count of all items
+
+        const COPYRIGHT_TEXT = "© 2025 DocBray Foundation. All rights reserved.";
+        const MAX_SCORE_PER_ITEM = 5;
+        const MAX_PROGRAMS = 15; // Number of columns for the matrix
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show' + (isError ? ' error' : '');
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        // Helper function to get color based on score (NEW)
+        function getScoreColor(score) {
+            switch (score) {
+                case 1: return 'var(--rating-1)';
+                case 2: return 'var(--rating-2)';
+                case 3: return 'var(--rating-3)';
+                case 4: return 'var(--rating-4)';
+                case 5: return 'var(--rating-5)';
+                default: return 'var(--accent-blue)'; // Default color when unscored/deselected
+            }
+        }
+
+        // --- Initialization & UI Functions ---
+
+        function initializeChecklist() {
+            const panel = document.getElementById('checklistPanel');
+            panel.innerHTML = ''; // Clear existing content
+            scores = {}; // Reset scores object
+            selectedItems.clear(); // Reset selections
+            totalItemsCount = 0; // Reset total count
+
+            Object.keys(checklistData).forEach((category, index) => {
+                const items = checklistData[category];
+                totalItemsCount += items.length;
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                
+                // Generate HTML for items (UPDATED structure for responsiveness)
+                categoryDiv.innerHTML = `
+                    <div class="category-header" onclick="toggleCategory('category-${index}')">
+                        <h3 class="category-title">${category}</h3>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="category-count">${items.length} items</span>
+                            <span class="toggle-icon" id="icon-category-${index}">▼</span>
+                        </div>
+                    </div>
+                    <div class="category-items" id="category-${index}">
+                        ${items.map((item, itemIndex) => {
+                            const itemId = `item-${index}-${itemIndex}`;
+                            const escapedItem = item.replace(/'/g, "\\'");
+                            const key = `${category}|||${escapedItem}`;
+                            scores[key] = null; 
+                            
+                            // Rating container starts disabled. 'unscored' class is kept for input styling consistency.
+                            return `
+                            <div class="checklist-item" id="wrapper-${itemId}">
+                                <div class="item-selection-container">
+                                    <input type="checkbox" id="checkbox-${itemId}" 
+                                           onchange="handleSelectionChange('${key}', '${itemId}', this.checked)">
+                                    <label class="item-label" for="checkbox-${itemId}">${item}</label>
+                                </div>
+                                <div class="rating-container unscored disabled" id="container-${itemId}">
+                                    <div class="slider-container">
+                                        <input type="range" min="1" max="${MAX_SCORE_PER_ITEM}" value="3" class="rating-slider" id="slider-${itemId}"
+                                               oninput="handleSliderChange('${key}', '${itemId}')"
+                                               style="accent-color: ${getScoreColor(null)}">
+                                    </div>
+                                    <input type="text" value="--" inputmode="numeric" class="rating-input" id="input-${itemId}"
+                                           onfocus="handleInputFocus('${key}', '${itemId}')"
+                                           onchange="handleInputChange('${key}', '${itemId}')"
+                                           onkeydown="handleInputKeydown(event, '${itemId}')">
+                                </div>
+                            </div>
+                        `}).join('')}
+                    </div>
+                `;
+                panel.appendChild(categoryDiv);
+            });
+
+            updateSummary();
+            updateFilterClasses();
+        }
+
+        function toggleCategory(categoryId) {
+            const items = document.getElementById(categoryId);
+            const icon = document.getElementById('icon-' + categoryId);
+            items.classList.toggle('collapsed');
+            icon.classList.toggle('collapsed');
+        }
+
+        function updateFilterClasses() {
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+            document.querySelectorAll('.category').forEach(category => {
+                const hasSelected = category.querySelector('.checklist-item.selected');
+                if (hasSelected) {
+                    category.classList.add('has-selected');
+                } else {
+                    category.classList.remove('has-selected');
+                }
+            });
+        }
+
+        function toggleFilter() {
+            filterActive = !filterActive;
+            const container = document.querySelector('.container');
+            const btn = document.getElementById('filterBtn');
+            if (filterActive) {
+                container.classList.add('filter-active');
+                btn.textContent = '👁️ Show All';
+                btn.classList.remove('btn-warning');
+                btn.classList.add('btn-primary');
+                showToast('📌 Showing only selected criteria');
+            } else {
+                container.classList.remove('filter-active');
+                btn.textContent = '👁️ Hide Unselected';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-warning');
+                showToast('👁️ Showing all criteria');
+            }
+        }
+
+
+        // Handles checkbox changes (UPDATED: Defaults to 3 on selection)
+        function handleSelectionChange(key, itemId, isChecked) {
+            const ratingContainer = document.getElementById(`container-${itemId}`);
+            
+            if (isChecked) {
+                selectedItems.add(key);
+                ratingContainer.classList.remove('disabled');
+
+                if (scores[key] === null) {
+                    updateScore(key, 3, itemId);
+                }
+
+            } else {
+                selectedItems.delete(key);
+                ratingContainer.classList.add('disabled');
+
+                if (scores[key] !== null) {
+                    updateScore(key, null, itemId);
+                }
+            }
+            
+            updateSummary();
+            updateFilterClasses();
+        }
+
+        // Helper function to trigger selection updates programmatically (for buttons)
+        function programmaticSelect(criteriaList = null, selectAll = false) {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const itemId = checkbox.id.replace('checkbox-', '');
+                const labelElement = document.querySelector(`label[for="checkbox-${itemId}"]`);
+                const labelText = labelElement.textContent;
+
+                let shouldBeChecked = selectAll;
+                if (criteriaList) {
+                    shouldBeChecked = criteriaList.includes(labelText);
+                }
+                
+                if (checkbox.checked !== shouldBeChecked) {
+                    checkbox.checked = shouldBeChecked;
+                    
+                    const categoryElement = checkbox.closest('.category');
+                    const categoryTitle = categoryElement.querySelector('.category-title').textContent;
+                    const escapedItem = labelText.replace(/'/g, "\\'");
+                    const key = `${categoryTitle}|||${escapedItem}`;
+
+                    handleSelectionChange(key, itemId, shouldBeChecked);
+                }
+            });
+        }
+
+        function selectTopTen() {
+            const topTenFactors = [
+                "Program consistently exceeds ACGME minimum of 850 total major cases (1000+ cases preferred)",
+                "Chief residents function as primary surgeon on complex cases with attending oversight",
+                "Graduates report feeling confident performing common procedures independently",
+                "High first-time pass rates for ABS qualifying (written) exam (>90% ideal)",
+                "High first-time pass rates for ABS certifying (oral) exam (>90% ideal)",
+                "Cooperative, supportive resident cohort (not cutthroat competition)",
+                "High resident morale - residents appear happy and energetic",
+                "High fellowship match rate for interested residents",
+                "Accessible and approachable faculty with open-door policy",
+                "Overall positive gut feeling about program culture and fit"
+            ];
+            programmaticSelect(topTenFactors);
+            showToast('✅ Selected Top 10 criteria');
+        }
+        
+        function selectTop25() {
+            const top25Factors = [
+                "Program consistently exceeds ACGME minimum of 850 total major cases (1000+ cases preferred)",
+                "Chief residents function as primary surgeon on complex cases with attending oversight",
+                "Graduates report feeling confident performing common procedures independently",
+                "High first-time pass rates for ABS qualifying (written) exam (>90% ideal)",
+                "High first-time pass rates for ABS certifying (oral) exam (>90% ideal)",
+                "Cooperative, supportive resident cohort (not cutthroat competition)",
+                "High resident morale - residents appear happy and energetic",
+                "High fellowship match rate for interested residents",
+                "Accessible and approachable faculty with open-door policy",
+                "Overall positive gut feeling about program culture and fit",
+                "Chief residents reliably achieve >200 cases in chief year",
+                "Early operative exposure - interns actively participate in OR from Year 1",
+                "Clear progression of autonomy from PGY-1 to PGY-5",
+                "Well-organized curriculum aligned with SCORE curriculum standards",
+                "Weekly protected didactic time (grand rounds, M&M, journal club, lectures)",
+                "On-site surgical simulation center with comprehensive equipment",
+                "Structured mentorship program with assigned faculty mentors",
+                "Rotation at Level I trauma center (or robust Level II)",
+                "Strong ABSITE performance (at or above national mean)",
+                "Competitive placements in desirable fellowships (pediatric, oncology, vascular, etc.)",
+                "Consistent adherence to 80-hour weekly limit (averaged over 4 weeks)",
+                "High overall resident satisfaction (>80% would choose program again)",
+                "No reports of malignant culture on interviews or online forums",
+                "\"Continued Accreditation\" status without warnings or probation",
+                "Residents appear happy, energetic, and speak honestly about program"
+            ];
+            programmaticSelect(top25Factors);
+            showToast('✅ Selected Top 25 criteria');
+        }
+
+        function selectAll() { programmaticSelect(null, true); showToast('✅ All criteria selected and rated 3'); }
+        function deselectAll() { programmaticSelect([], false); showToast('✅ All criteria deselected'); }
+
+        // --- Scoring Handlers ---
+
+        function handleInputFocus(key, itemId) {
+            const input = document.getElementById(`input-${itemId}`);
+            if (!selectedItems.has(key)) return;
+            input.select();
+        }
+
+        function handleSliderChange(key, itemId) {
+            if (!selectedItems.has(key)) return;
+            const slider = document.getElementById(`slider-${itemId}`);
+            const score = parseInt(slider.value);
+            updateScore(key, score, itemId);
+        }
+
+        function handleInputChange(key, itemId) {
+            if (!selectedItems.has(key)) return;
+            const input = document.getElementById(`input-${itemId}`);
+            let value = input.value.trim();
+
+            if (value === "" || value === "--") {
+                updateScore(key, 3, itemId);
+                if (value !== "") {
+                     showToast('ℹ️ Selected criteria must have a rating. Reset to 3 (Average).');
+                }
+                return;
+            }
+
+            let score = parseInt(value);
+
+            if (isNaN(score) || score < 1 || score > MAX_SCORE_PER_ITEM) {
+                const previousScore = scores[key];
+                updateScore(key, previousScore !== null ? previousScore : 3, itemId);
+                if (value !== "") {
+                     showToast(`⚠️ Please enter a number between 1 and ${MAX_SCORE_PER_ITEM}.`, true);
+                }
+            } else {
+                updateScore(key, score, itemId);
+            }
+        }
+
+        function handleInputKeydown(event, itemId) {
+            if (event.key === 'Backspace' || event.key === 'Delete' || event.key.startsWith('Arrow') || event.key === 'Tab') return;
+            if (event.key === 'Enter') {
+                document.getElementById(`input-${itemId}`).blur(); 
+                event.preventDefault();
+                return;
+            }
+            if (!/^[1-5]$/.test(event.key)) {
+                event.preventDefault();
+            }
+        }
+
+        function updateScore(key, score, itemId) {
+            const container = document.getElementById(`container-${itemId}`);
+            const input = document.getElementById(`input-${itemId}`);
+            const slider = document.getElementById(`slider-${itemId}`);
+
+            if (!container || !input || !slider) return;
+
+            scores[key] = score;
+
+            if (score === null) {
+                container.classList.add('unscored');
+                input.value = "--";
+                slider.value = 3; 
+                slider.style.accentColor = getScoreColor(null);
+            } else {
+                container.classList.remove('unscored');
+                input.value = score;
+                slider.value = score;
+                slider.style.accentColor = getScoreColor(score);
+            }
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let totalScoreAccumulated = 0;
+            let selectedCount = selectedItems.size;
+
+            selectedItems.forEach(key => {
+                 if (scores[key] !== null && scores[key] !== undefined) {
+                    totalScoreAccumulated += scores[key];
+                }
+            });
+
+            const maxPossibleScore = selectedCount * MAX_SCORE_PER_ITEM;
+
+            let scoreRatio = 0;
+            if (maxPossibleScore > 0) {
+                scoreRatio = totalScoreAccumulated / maxPossibleScore;
+            }
+
+            document.getElementById('scoreRatio').textContent = scoreRatio.toFixed(2);
+            document.getElementById('totalScore').textContent = totalScoreAccumulated;
+            document.getElementById('maxPossibleScore').textContent = maxPossibleScore;
+            document.getElementById('selectedCount').textContent = selectedCount;
+        }
+        
+        function resetForm() {
+            if (confirm("Are you sure you want to reset the form? All selections, scores, details, and comments will be cleared.")) {
+                document.getElementById('programName').value = "";
+                document.getElementById('narrativeComments').value = "";
+                setDefaultDate();
+                if (filterActive) {
+                    toggleFilter();
+                }
+                initializeChecklist();
+                showToast('✅ Form reset successfully!');
+            }
+        }
+
+        // --- Data Retrieval for Export ---
+        function getExportData() {
+            const programName = document.getElementById('programName').value.trim();
+            const interviewDate = document.getElementById('interviewDate').value;
+            const narrativeComments = document.getElementById('narrativeComments').value.trim();
+            
+            const scoreRatio = document.getElementById('scoreRatio').textContent;
+            const totalScore = document.getElementById('totalScore').textContent;
+            const maxPossibleScore = document.getElementById('maxPossibleScore').textContent;
+            const selectedCount = document.getElementById('selectedCount').textContent;
+            
+            const itemsByCategory = {};
+
+             Object.keys(checklistData).forEach(category => {
+                checklistData[category].forEach(item => {
+                    const escapedItem = item.replace(/'/g, "\\'");
+                    const key = `${category}|||${escapedItem}`;
+                    
+                    if (selectedItems.has(key)) {
+                        if (!itemsByCategory[category]) {
+                            itemsByCategory[category] = [];
+                        }
+                        const score = scores[key];
+                        itemsByCategory[category].push({
+                            item: item,
+                            score: score
+                        });
+                    }
+                });
+            });
+
+            return {
+                programName, interviewDate, narrativeComments, scoreRatio, totalScore, maxPossibleScore, selectedCount, totalCount: totalItemsCount, itemsByCategory
+            };
+        }
+        
+        // --- Export Functions (Excel, CSV, PDF) ---
+        
+        function exportToExcel() {
+            if (selectedItems.size === 0) {
+                showToast('⚠️ Please select at least one criterion before exporting.', true);
+                return;
+            }
+
+            if (typeof XLSX === 'undefined') {
+                showToast('❌ Excel library not loaded. Please refresh.', true);
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('excelBtn');
+                btn.disabled = true;
+                btn.textContent = '⏳ Generating...';
+
+                const data = getExportData();
+                const wsData = [];
+                const generatedDate = new Date().toLocaleDateString();
+                const maxPossibleScoreValue = parseInt(data.maxPossibleScore);
+
+                const nameRow = ['Category', 'Criteria'];
+                nameRow.push(data.programName || '[Enter Program Name]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { nameRow.push(`[Enter Program ${i} Name]`); }
+                wsData.push(nameRow);
+
+                const interviewDateRow = ['Details', 'Interview Date'];
+                interviewDateRow.push(data.interviewDate || '[Enter Date]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { interviewDateRow.push('[Enter Date]'); }
+                wsData.push(interviewDateRow);
+
+                const generatedDateRow = ['Details', 'Generated Date'];
+                const isP1Populated = data.programName || data.interviewDate || data.narrativeComments;
+                generatedDateRow.push( isP1Populated ? generatedDate : '[N/A]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { generatedDateRow.push('[N/A]'); }
+                wsData.push(generatedDateRow);
+
+                wsData.push([]);
+                const dataStartRow = 5; 
+                
+                Object.keys(data.itemsByCategory).forEach(category => {
+                    data.itemsByCategory[category].forEach(entry => {
+                        const row = [category, entry.item];
+                        const scoreValue = entry.score !== null ? entry.score : 'Error'; 
+                        row.push(scoreValue);
+
+                        for (let i = 2; i <= MAX_PROGRAMS; i++) {
+                            row.push('');
+                        }
+                        wsData.push(row);
+                    });
+                });
+
+                const dataEndRow = wsData.length;
+
+                const pointsSelectedRow = ['Summary', 'Points Selected (Total)'];
+                const pointsAvailableRow = ['Summary', 'Points Available (Max)'];
+                const scoreRatioRow = ['Summary', 'Score Ratio (0.00-1.00)'];
+
+                for (let i = 0; i < MAX_PROGRAMS; i++) {
+                    const colLetter = String.fromCharCode(67 + i); 
+                    const sumFormula = `SUM(${colLetter}${dataStartRow}:${colLetter}${dataEndRow})`;
+                    pointsSelectedRow.push({ f: sumFormula });
+
+                    pointsAvailableRow.push(maxPossibleScoreValue);
+
+                    const totalScoreRowNum = dataEndRow + 1;
+                    const maxScoreRowNum = dataEndRow + 2;
+                    const ratioFormula = `IFERROR(${colLetter}${totalScoreRowNum} / ${colLetter}${maxScoreRowNum}, 0)`;
+                    
+                    scoreRatioRow.push({ f: ratioFormula, t: 'n', z: '0.00' });
+                }
+
+                wsData.push(pointsSelectedRow);
+                wsData.push(pointsAvailableRow);
+                wsData.push(scoreRatioRow);
+
+                wsData.push([]);
+
+                const commentsRow = ['Comments', 'Narrative (First 24h)'];
+                commentsRow.push(data.narrativeComments || '[Enter Comments]');
+                 for (let i = 2; i <= MAX_PROGRAMS; i++) { commentsRow.push('[Enter Comments]'); }
+                wsData.push(commentsRow);
+
+                wsData.push([]);
+                wsData.push([COPYRIGHT_TEXT]);
+                wsData.push(['Rating Scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent']);
+
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+                const cols = [{ wch: 40 }, { wch: 65 }];
+                for (let i = 0; i < MAX_PROGRAMS; i++) { cols.push({ wch: 25 }); }
+                ws['!cols'] = cols;
+
+                XLSX.utils.book_append_sheet(wb, ws, 'Program Comparison Matrix');
+
+                const filenamePrefix = data.programName ? `GS_Matrix_${data.programName.replace(/[^a-z0-9]/gi, '_')}_` : 'GS_Comparison_Matrix_';
+                const filename = `${filenamePrefix}${new Date().toISOString().split('T')[0]}.xlsx`;
+                
+                XLSX.writeFile(wb, filename);
+
+                showToast('✅ Excel Comparison Matrix downloaded!');
+                
+            } catch (error) {
+                console.error('Excel export error:', error);
+                showToast('❌ Export failed: ' + error.message, true);
+            } finally {
+                const btn = document.getElementById('excelBtn');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = '📊 Export (Excel)';
+                }
+            }
+        }
+
+        function exportToCSV() {
+             if (selectedItems.size === 0) {
+                showToast('⚠️ Please select at least one criterion before exporting.', true);
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('csvBtn');
+                btn.disabled = true;
+                btn.textContent = '⏳ Generating...';
+
+                const data = getExportData();
+                const generatedDate = new Date().toLocaleDateString();
+
+                 const escapeCSV = (field) => {
+                    if (field === null || field === undefined) return '""';
+                    return `"${String(field).replace(/"/g, '""')}"`;
+                };
+
+                const createCSVRow = (arr) => arr.map(escapeCSV).join(',') + '\n';
+                
+                let csvContent = "";
+
+                // --- Header Rows ---
+                const nameRow = ['Category', 'Criteria'];
+                nameRow.push(data.programName || '[Enter Program Name]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { nameRow.push(`[Enter Program ${i} Name]`); }
+                csvContent += createCSVRow(nameRow);
+
+                const interviewDateRow = ['Details', 'Interview Date'];
+                interviewDateRow.push(data.interviewDate || '[Enter Date]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { interviewDateRow.push('[Enter Date]'); }
+                csvContent += createCSVRow(interviewDateRow);
+
+                const generatedDateRow = ['Details', 'Generated Date'];
+                const isP1Populated = data.programName || data.interviewDate || data.narrativeComments;
+                generatedDateRow.push( isP1Populated ? generatedDate : '[N/A]');
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { generatedDateRow.push('[N/A]'); }
+                csvContent += createCSVRow(generatedDateRow);
+
+                csvContent += "\n";
+
+                 Object.keys(data.itemsByCategory).forEach(category => {
+                    data.itemsByCategory[category].forEach(entry => {
+                        const row = [category, entry.item];
+                        const scoreText = entry.score !== null ? entry.score : 'Error'; 
+                        row.push(scoreText);
+
+                        for (let i = 2; i <= MAX_PROGRAMS; i++) {
+                            row.push('');
+                        }
+                        csvContent += createCSVRow(row);
+                    });
+                });
+
+                const pointsSelectedRow = ['Summary', 'Points Selected (Total)'];
+                pointsSelectedRow.push(data.totalScore);
+                for (let i = 2; i <= MAX_PROGRAMS; i++) { pointsSelectedRow.push('[Calculate Total]'); }
+                csvContent += createCSVRow(pointsSelectedRow);
+
+                const pointsAvailableRow = ['Summary', 'Points Available (Max)'];
+                for (let i = 1; i <= MAX_PROGRAMS; i++) { pointsAvailableRow.push(data.maxPossibleScore); }
+                csvContent += createCSVRow(pointsAvailableRow);
+
+                const scoreRatioRow = ['Summary', 'Score Ratio (0.00-1.00)'];
+                 scoreRatioRow.push(data.scoreRatio);
+                 for (let i = 2; i <= MAX_PROGRAMS; i++) { scoreRatioRow.push('[Calculate Ratio]'); }
+                csvContent += createCSVRow(scoreRatioRow);
+
+                 csvContent += "\n";
+
+                const commentsRow = ['Comments', 'Narrative (First 24h)'];
+                commentsRow.push(data.narrativeComments || '[Enter Comments]');
+                 for (let i = 2; i <= MAX_PROGRAMS; i++) { commentsRow.push('[Enter Comments]'); }
+                csvContent += createCSVRow(commentsRow);
+
+                 csvContent += "\n";
+                csvContent += createCSVRow([COPYRIGHT_TEXT]);
+                csvContent += createCSVRow(['Rating Scale: 1=Poor, 2=Below Average, 3=Average, 4=Good, 5=Excellent']);
+
+                const BOM = "\uFEFF";
+                const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+                
+                const filenamePrefix = data.programName ? `GS_Matrix_${data.programName.replace(/[^a-z0-9]/gi, '_')}_` : 'GS_Comparison_Matrix_';
+                const filename = `${filenamePrefix}${new Date().toISOString().split('T')[0]}.csv`;
+                
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                showToast('✅ CSV Comparison Matrix downloaded!');
+                
+            } catch (error) {
+                console.error('CSV export error:', error);
+                showToast('❌ Export failed: ' + error.message, true);
+            } finally {
+                const btn = document.getElementById('csvBtn');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = '📄 Export (CSV)';
+                }
+            }
+        }
+
+        function exportToPDF() {
+            if (selectedItems.size === 0) {
+                showToast('⚠️ Please select at least one criterion before exporting.', true);
+                return;
+            }
+
+            if (typeof window.jspdf === 'undefined') {
+                showToast('❌ PDF library not loaded. Please refresh.', true);
+                return;
+            }
+           
+            try {
+                const btn = document.getElementById('pdfBtn');
+                btn.disabled = true;
+                btn.textContent = '⏳ Generating...';
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const data = getExportData();
+
+                const displayName = data.programName || "[Not Specified]";
+                const displayDate = data.interviewDate || "[Not Specified]";
+
+
+                let yPosition = 20;
+                const pageHeight = doc.internal.pageSize.height;
+                const pageWidth = doc.internal.pageSize.width;
+                const margin = 15;
+                const contentWidth = pageWidth - (margin * 2);
+                const criteriaWidth = contentWidth * 0.85;
+                const scoreX = margin + criteriaWidth + 5;
+
+                const addFooter = () => {
+                    const pageCount = doc.internal.getNumberOfPages();
+                    doc.setFontSize(8);
+                    doc.setTextColor(100, 100, 100);
+                    for (let i = 1; i <= pageCount; i++) {
+                        doc.setPage(i);
+                        doc.text(COPYRIGHT_TEXT, margin, pageHeight - 10);
+                        doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+                    }
+                };
+
+                doc.setFontSize(18);
+                doc.setTextColor(42, 82, 152); 
+                doc.text('General Surgery Residency Evaluation Report', pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 10;
+                
+                doc.setFontSize(14);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont(undefined, 'bold');
+                const splitName = doc.splitTextToSize(displayName, contentWidth);
+                doc.text(splitName, pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += splitName.length * 7;
+
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Interview Date: ${displayDate} | Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPosition, { align: 'center' });
+                yPosition += 15;
+
+                const summaryBoxHeight = 30;
+                doc.setFillColor(240, 248, 255);
+                doc.rect(margin, yPosition, contentWidth, summaryBoxHeight, 'F');
+                doc.setDrawColor(42, 82, 152);
+                doc.setLineWidth(0.5);
+                doc.rect(margin, yPosition, contentWidth, summaryBoxHeight);
+                
+                yPosition += 9;
+                doc.setFontSize(12);
+                doc.setTextColor(42, 82, 152);
+                doc.setFont(undefined, 'bold');
+                doc.text('Score Ratio (0.00-1.00):', margin + 5, yPosition);
+                
+                doc.setFontSize(18);
+                doc.setTextColor(34, 139, 34); 
+                doc.text(data.scoreRatio, margin + 65, yPosition + 1);
+
+                yPosition += 9;
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Total Points: ${data.totalScore} / ${data.maxPossibleScore} (Max Possible)`, margin + 5, yPosition);
+                
+                yPosition += 7;
+                doc.text(`Total Points: ${data.totalScore} / ${data.maxPossibleScore} (Max Possible)`, margin + 5, yPosition);
+                
+                yPosition += 7;
+                doc.text(`Criteria Selected: ${data.selectedCount}`, margin + 5, yPosition);
+
+                yPosition += 15;
+
+                // Rating Scale Info & Table Headers (Identical)
+
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont(undefined, 'bold');
+                doc.text('Criteria', margin, yPosition);
+                doc.text('Score', scoreX, yPosition);
+                yPosition += 2;
+                doc.setDrawColor(0, 0, 0);
+                doc.line(margin, yPosition, pageWidth - margin, yPosition);
+                yPosition += 6;
+
+                doc.setFont(undefined, 'normal');
+                
+                Object.keys(data.itemsByCategory).forEach(category => {
+                    if (yPosition > pageHeight - 30) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+
+                    doc.setFontSize(11);
+                    doc.setTextColor(0, 139, 139); 
+                    doc.setFont(undefined, 'bold');
+                    doc.text(category, margin, yPosition);
+                    yPosition += 7;
+
+                    doc.setFontSize(9);
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFont(undefined, 'normal');
+                    
+                    data.itemsByCategory[category].forEach(entry => {
+                        const splitText = doc.splitTextToSize(entry.item, criteriaWidth - 5);
+                        const requiredHeight = splitText.length * 5 + 3;
+
+                        if (yPosition + requiredHeight > pageHeight - 20) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+
+                        doc.text(splitText, margin + 3, yPosition);
+                        
+                        const scoreText = entry.score !== null ? String(entry.score) : 'Error';
+                        
+                        doc.setTextColor(34, 139, 34); 
+                        doc.setFont(undefined, 'bold');
+                       
+                        doc.text(scoreText, scoreX, yPosition);
+                        
+                        doc.setTextColor(0, 0, 0);
+                        doc.setFont(undefined, 'normal');
+
+                        yPosition += requiredHeight;
+                    });
+                    yPosition += 3;
+                });
+
+                 if (yPosition > pageHeight - 50) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+
+                yPosition += 10;
+                doc.setFontSize(12);
+                doc.setTextColor(218, 165, 32); 
+                doc.setFont(undefined, 'bold');
+                doc.text('Narrative Comments (First 24h Reactions)', margin, yPosition);
+                yPosition += 7;
+
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont(undefined, 'normal');
+                
+                const comments = data.narrativeComments || 'No comments entered.';
+                const splitComments = doc.splitTextToSize(comments, contentWidth);
+                
+                for (const line of splitComments) {
+                    if (yPosition > pageHeight - 20) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    doc.text(line, margin, yPosition);
+                    yPosition += 6;
+                }
+
+                addFooter();
+                
+                const filenamePrefix = data.programName ? `GS_Report_${data.programName.replace(/[^a-z0-9]/gi, '_')}_` : 'GS_Report_';
+                const filename = `${filenamePrefix}${new Date().toISOString().split('T')[0]}.pdf`;
+                doc.save(filename);
+
+                showToast('✅ PDF Report downloaded successfully!');
+                
+            } catch (error) {
+                console.error('PDF export error:', error);
+                showToast('❌ Export failed: ' + error.message, true);
+            } finally {
+                const btn = document.getElementById('pdfBtn');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = '📑 Export (PDF)';
+                }
+            }
+        }
+
+
+        function setDefaultDate() {
+            const today = new Date();
+            const offset = today.getTimezoneOffset();
+            
+            if (isNaN(offset)) {
+                 return;
+            }
+
+            try {
+                const localDate = new Date(today.getTime() - (offset*60*1000));
+                const dateInput = document.getElementById('interviewDate');
+                
+                if (dateInput && dateInput.type === 'date') {
+                    dateInput.value = localDate.toISOString().split('T')[0];
+                }
+            } catch (e) {
+                console.error("Error setting default date:", e);
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initializeChecklist();
+            setDefaultDate();
+            console.log('General Surgery Residency Evaluation & Selection Tool Initialized');
+        };
+    </script>
+</body>
+</html>
+
+
